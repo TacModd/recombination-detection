@@ -37,13 +37,15 @@ spt1v3 = function(ptns, sig){
       }
       tempmatrix = matrix(0, nrow=tempcount, ncol=5)
       tempcount = 1
-      for (j in 1:length(tempvector)){
-        if (!is.null(tempvector[[j]])){
-          tempmatrix[tempcount, ] = tempvector[[j]]
-          tempcount = tempcount + 1
+      if (length(tempvector) > 0){
+        for (j in 1:length(tempvector)){
+          if (!is.null(tempvector[[j]])){
+            tempmatrix[tempcount, ] = tempvector[[j]]
+            tempcount = tempcount + 1
+          }
         }
+        results[[i]] = tempmatrix
       }
-      results[[i]] = tempmatrix
     }
   }
   results
