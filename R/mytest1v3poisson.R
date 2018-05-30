@@ -36,7 +36,7 @@ spt1v3 = function(ptns, sig){
           j = j + 1
         }
       }
-      tempmatrix = matrix(0, nrow=tempcount, ncol=5)
+      tempmatrix = matrix(0, nrow=innertempcount, ncol=5)
       innertempcount = 1
       if (length(tempvector) > 0){
         for (j in 1:length(tempvector)){
