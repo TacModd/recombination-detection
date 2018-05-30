@@ -46,7 +46,7 @@ spt1v3 = function(ptns, sig){
           }
         }
         outertempcount = outertempcount + 1
-        results[[i]] = tempmatrix
+        results[[outertempcount]] = tempmatrix
       }
     }
   }
