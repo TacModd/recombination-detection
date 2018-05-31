@@ -1,4 +1,4 @@
-# 2nd of Stephens' tests
+# 2nd of Stephens' tests - corresponds to equations 8, 9 and 10 in paper
 lengthrtest = function(s, r, k){
   pm = 0
   for (i in k:r){
