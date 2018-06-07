@@ -36,4 +36,4 @@ pttns = sapply(1:ncol(pttns), function(x) paste(pttns[, x], collapse = ''))
 ptns = partitions(pttns)
 
 m = matrix(ptns$pattern.indices, nrow = length(ptns$pattern.indices), ncol = nchar(ptns$patterns[1]), byrow = FALSE)
-image(x=1:length(ptns$pattern.indices), y=1:nchar(ptns$patterns[1]), z = m, col=rainbow(length(ptns$pattern.IDs)))
+image(x=1:length(ptns$pattern.indices), y=1:nchar(ptns$patterns[1]), z = m, col=rainbow(length(ptns$pattern.IDs)), xlab='Position of partition ID in genome', ylab='Sequence number')
