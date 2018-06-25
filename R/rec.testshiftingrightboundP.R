@@ -1,6 +1,6 @@
 # just implements the same as rec.testshifingwindows but with a poisson instead of a binomial model
 
-rec.testshiftingwindowsP = function(ptns, sig){
+rec.testshiftingrightboundP = function(ptns, sig){
   results = list()
   outertempcount = 0
   for (i in 1:length(ptns$pattern.IDs)){
