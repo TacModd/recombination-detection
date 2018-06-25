@@ -1,6 +1,6 @@
-# just implements the same as 1v3 but with a poisson instead of a binomial model
+# just implements the same as rec.testshifingwindows but with a poisson instead of a binomial model
 
-spt1v3 = function(ptns, sig){
+rec.testshiftingwindowsP = function(ptns, sig){
   results = list()
   outertempcount = 0
   for (i in 1:length(ptns$pattern.IDs)){
