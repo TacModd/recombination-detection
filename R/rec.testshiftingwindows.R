@@ -1,6 +1,6 @@
 # another implementation; changes output format
 
-spt1v3 = function(ptns, sig){
+rec.testshiftingwindows = function(ptns, sig){
   results = list()
   outertempcount = 0
   for (i in 1:length(ptns$pattern.IDs)){
