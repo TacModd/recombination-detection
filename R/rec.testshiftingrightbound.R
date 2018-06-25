@@ -1,6 +1,6 @@
 # another implementation; changes output format
 
-rec.testshiftingwindows = function(ptns, sig){
+rec.testshiftingrightbound = function(ptns, sig){
   results = list()
   outertempcount = 0
   for (i in 1:length(ptns$pattern.IDs)){
