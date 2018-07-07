@@ -1,4 +1,6 @@
-# an updated version of myplot2 that works with the new output format
+# plots the distribution of sites i from ptns AND recombined sites j from res 
+# across the length of the genome
+# recombined regions are highlighted in pink
 
 myplot2v2 = function(ptns, res, j){
   i = res[[j]][1, 1]
