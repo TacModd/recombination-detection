@@ -12,16 +12,16 @@ rec.testshiftingrightbound = function(ptns, sig){
       j = 1
       while (j < (length(indices)-1)){
         n1 = indices[j+2]-indices[j]+1
-        r1 = 1 - pbinom(2, n1, p) # r1 = pbinom(2, n1, p, log=TRUE)
-        if (r1 <= sig){ # alternative (r1 > log(1 - sig))
+        r1 = pbinom(2, n1, p, log=TRUE) # r1 = 1 - pbinom(2, n1, p) # 
+        if (r1 > log(1 - sig)){ # (r1 <= sig)
           k = j+2
           while (k < length(indices)){
             n1 = indices[k]-indices[j]+1
-            r1 = 1 - pbinom((k-j), n1, p) # r1 = pbinom((k-j), n1, p, log=TRUE)
+            r1 = pbinom((k-j), n1, p, log=TRUE) # r1 = 1 - pbinom((k-j), n1, p) # 
             n2 = indices[k+1]-indices[j]+1
-            r2 = 1 - pbinom((k-j+1), n2, p) # r2 = pbinom((k-j+1), n2, p, log=TRUE)
+            r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
             
-            if (r2 <= r1){ # (r2 >= r1)
+            if (r2 >= r1){ # alternative (r2 <= r1)
               k = k + 1
             } else {
               break
