@@ -1,4 +1,4 @@
-### no longer intended for use; here if I need the old output format for some reason ###
+### OUTDATED: no longer intended for use; here if I need the old output format ###
 # takes returned value of partitions function plus desired threshold
 # iteratively calculates probability of k + 1 or more sampled in n
 # for all possible k with first and last k indices forming bounds of n
