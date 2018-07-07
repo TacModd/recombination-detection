@@ -1,3 +1,4 @@
+### OUTDATED: works only with old output format ###
 # plots the distribution of sites i from ptns AND recombined sites j from res 
 # across the length of the genome
 # recombined regions are highlighted in pink
