@@ -1,4 +1,5 @@
-incomplete
+### OUTDATED: test no longer intended to be completed ###
+# incomplete
 # window based on set n
 # for i in range pattern.IDs
 spt2 = function(ptns, i){
