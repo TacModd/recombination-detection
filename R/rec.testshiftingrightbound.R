@@ -1,4 +1,4 @@
-# another implementation; changes output format
+# expands right bound while test <= prior test; otherwise right bound forms left bound of new test (linear complexity)
 
 rec.testshiftingrightbound = function(ptns, sig){
   results = list()
