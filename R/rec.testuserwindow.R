@@ -1,4 +1,4 @@
-# implements user set window method
+# implements (advanced) user set window method
 # note does not work well in practise - perhaps consider
 # changing implementation to testing genome length/n times
 # and shift bounds from there?
