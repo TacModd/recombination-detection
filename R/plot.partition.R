@@ -1,5 +1,5 @@
 # plots the distribution of sites i from ptns across the length of the genome
-# need to add functionality to show hypothetical recombined regions
+
 myplot1 = function(ptns, i){
   indices = which(ptns$pattern.indices == i)
   #fit = cmdscale(dist(indices), eig=FALSE, k=1)
