@@ -1,11 +1,10 @@
 # this function returns a partition object, which includes the number of unique partition
-# patterns, their ids, their indices, and their counts
+# patterns, their ids, their indices, and their counts in a list of lists
 partitions = function(patterns){
-  #constant.sites = unique(grep(as.character(paste('1{', nchar(patterns[1]), '}', sep='')), patterns, value = TRUE))
-  #sites = [patterns[patterns != constant.sites]
-  # this way is faster
-  sites = unique(patterns[patterns != as.character(paste(rep(1, nchar(patterns[1])), collapse=''))])
-  list(patterns = sites, pattern.IDs = match(sites, sites), pattern.indices = match(patterns, sites),
-       pattern.counts = c(table(match(patterns, sites))))
+  # obtain partitions from pattern object (ignore constant sites)
+  partitions = unique(patterns[patterns != as.character(paste(rep(1, nchar(patterns[1])), collapse=''))])
+  # return partition object
+  list(patterns = partitions, pattern.IDs = match(partitions, partitions), pattern.indices = match(patterns, partitions),
+       pattern.counts = c(table(match(patterns, partitions))))
   
 }
