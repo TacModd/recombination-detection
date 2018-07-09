@@ -1,14 +1,16 @@
-# takes returned value of partitions function plus desired threshold
-# iteratively calculates probability of k + 1 or more sampled in n
-# for all possible k with first and last k indices forming bounds of n
-# returns results as a list of matrices
-res.testall = function(ptns, sig){
+# takes a partition object and a desired significance threshold
+# for each partition generates all possible permutations of
+# windows using the ith partition's sites as bounds, then
+# calculates probability of k + 1 sites or more sampled within
+# those bounds, assuming a binomial distribution
+# returns a result object (a list of matrices)
+rbn.permute = function(partitions, sig){
   results = list()
   outertempcount = 0
-  for (i in 1:length(ptns$pattern.IDs)){
-    if (ptns$pattern.counts[i] > 1){
-      indices = which(ptns$pattern.indices == i)
-      p = length(indices)/length(ptns$pattern.indices)
+  for (i in 1:length(partitions$pattern.IDs)){
+    if (partitions$pattern.counts[i] > 1){
+      indices = which(partitions$pattern.indices == i)
+      p = length(indices)/length(partitions$pattern.indices)
       innertempcount = 0
       tempvector = list()
       for (j in 1:(length(indices) - 1)){
