@@ -1,12 +1,12 @@
 # expands right bound while test <= prior test; otherwise right bound forms left bound of new test (linear complexity)
 
-rec.testshiftingrightbound = function(ptns, sig){
+rbn.shiftingrb = function(partitions, sig){
   results = list()
   outertempcount = 0
-  for (i in 1:length(ptns$pattern.IDs)){
-    if (ptns$pattern.counts[i] > 2){
-      indices = which(ptns$pattern.indices == i)
-      p = length(indices)/length(ptns$pattern.indices)
+  for (i in 1:length(partitions$pattern.IDs)){
+    if (partitions$pattern.counts[i] > 2){
+      indices = which(partitions$pattern.indices == i)
+      p = length(indices)/length(partitions$pattern.indices)
       innertempcount = 0
       tempvector = list()
       j = 1
@@ -21,7 +21,7 @@ rec.testshiftingrightbound = function(ptns, sig){
             n2 = indices[k+1]-indices[j]+1
             r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
             
-            if (r2 >= r1){ # alternative (r2 <= r1)
+            if (r2 >= r1){ # (r2 <= r1)
               k = k + 1
             } else {
               break
