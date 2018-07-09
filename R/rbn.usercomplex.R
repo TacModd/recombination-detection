@@ -62,7 +62,7 @@ rbn.usercomplex = function(partitions, sig, n){
           # 
           n = tempindices[length(tempindices) - k] - j
           # 
-          sigval = 1 - pbinom(q, n, p) # doesn't need fixing
+          sigval = 1 - pbinom(q, n, p) # does need fixing to avoid underflow (convert to log and back)
           # 
           tempvector[[j]] = c(i, j, tempindices[length(tempindices) - k], q+1, n, sigval)
           # 
