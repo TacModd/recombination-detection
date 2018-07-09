@@ -3,7 +3,8 @@
 # according to result object
 
 plot.rbns = function(partitions, results){
-  plot(1, type='n', ylim = c(-1, 1), xlim = c(1, length(partitions$pattern.indices)))
+  plot(1, type='n', ylim = c(-1, 1), xlim = c(1, length(partitions$pattern.indices)), 
+      yaxt='n', xlab='Recombination positions in genome', ylab='')
   for (i in 1:length(results)){
     #j = res[[i]][1, 1]
     #indices = which(ptns$pattern.indices == j)
