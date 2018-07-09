@@ -1,12 +1,13 @@
 # just implements the same as rec.testshifingwindows but with a poisson instead of a binomial model
+# still need to convert to log and # comment
 
-rec.testshiftingrightboundP = function(ptns, sig){
+rbn.shiftingrbP = function(partitions, sig){
   results = list()
   outertempcount = 0
-  for (i in 1:length(ptns$pattern.IDs)){
-    if (ptns$pattern.counts[i] > 2){
-      indices = which(ptns$pattern.indices == i)
-      p = length(indices)/length(ptns$pattern.indices)
+  for (i in 1:length(partitions$pattern.IDs)){
+    if (partitions$pattern.counts[i] > 2){
+      indices = which(partitions$pattern.indices == i)
+      p = length(indices)/length(partitions$pattern.indices)
       innertempcount = 0
       tempvector = list()
       j = 1
