@@ -3,18 +3,18 @@
 # changing implementation to testing genome length/n times
 # and shift bounds from there?
 
-rec.testuserwindow = function(ptns, sig, n){
+rbn.usercomplex = function(partitions, sig, n){
   results = list()
   outertempcount = 0
-  for (i in 1:length(ptns$pattern.IDs)){
-    if (ptns$pattern.counts[i] > 2){
-      indices = which(ptns$pattern.indices == i)
-      p = length(indices)/length(ptns$pattern.indices)
+  for (i in 1:length(partitions$pattern.IDs)){
+    if (partitions$pattern.counts[i] > 2){
+      indices = which(partitions$pattern.indices == i)
+      p = length(indices)/length(partitions$pattern.indices)
       innertempcount = 0
       tempvector = list()
       j = indices[1]
       while (j < indices[length(indices)]){
-        tempindices = which(ptns$pattern.indices[j:(j+n-1)] == i)
+        tempindices = which(partitions$pattern.indices[j:(j+n-1)] == i)
         tempindices = tempindices + j - 1
         q = length(tempindices) - 1
         r1 = 1 - pbinom(q, n, p)
