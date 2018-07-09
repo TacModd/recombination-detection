@@ -9,7 +9,8 @@ plot.rbn = function(partitions, results, j){
   indices = which(partitions$pattern.indices == i)
   #fit = cmdscale(dist(indices), eig=FALSE, k=1)
   #plot(fit[, 1], rep(0, length(indices)), pch=19)
-  plot(indices, rep(0, length(indices)), pch=19, xlim = c(1, length(partitions$pattern.indices)))
+  plot(indices, rep(0, length(indices)), pch=19, xlim = c(1, length(partitions$pattern.indices)), 
+      yaxt='n', xlab='Partition positions in genome', ylab='')
   for (k in 1:nrow(results[[j]])){
     points(results[[j]][k, 2:3], c(0, 0), col='red', pch = 19)
     lines(results[[j]][k, 2:3], c(0, 0), lwd = c(100, 1), lend = 1, col='pink')
