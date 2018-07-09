@@ -34,7 +34,7 @@ rbn.userbasic = function(partitions, sig, n){
           # no point in below line, should probably be removed
           #n = tempindices[length(tempindices)] - j
           # recalculate probability
-          sigval = 1 - pbinom(k-1, n, p) # doesn't need fixing
+          sigval = 1 - pbinom(k-1, n, p) # needs fixing to avoid underflow (convert to log and back)
           # store event details (needs fixing)
           tempvector[[j]] = c(i, j, tempindices[length(tempindices)], k, n, sigval)
           # update rbn event count
