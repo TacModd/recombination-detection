@@ -18,7 +18,8 @@ rbn.userbasic = function(partitions, sig, n){
       # initalise a vector to temporarily store event details
       tempvector = list()
       # initialise a left bound marker equal to the 1st partition index
-      j = indices[1] # this introduces a bias on the first test - change?
+      # j = indices[1] # tintroduces a bias on the first test
+      j = 1
       # while we haven't iterated past the last ptn index:
       while (j < indices[length(indices)]){
         # get indices between j and j + user window size
