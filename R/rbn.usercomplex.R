@@ -31,45 +31,44 @@ rbn.usercomplex = function(partitions, sig, n){
         # get the number of 'events' (partitions) within window
         q = length(tempindices) - 1
         # calculate the probability of k or more events
-        r1 = 1 - pbinom(q, n, p) # fix
+        r1 = pbinom(q, n, p, log=TRUE) # r1 = 1 - pbinom(q, n, p) # make q vs k consistent
         # if probability below significance threshold:
-        if (r1 <= sig & q > 0){ # fix?
-          # 
+        if (r1 > log(1 - sig) & q > 0){ # (r1 <= sig & q > 0) # make q vs k consistent
+          # set a counter
           k = 0
-          # 
+          # get the number of events minus k
           q1 = length(tempindices) - k - 1
-          # 
+          # while there are at least 4(?) events
           while (q1 > 2){
-            # 
+            # calculate probability of q-k events
             q1 = length(tempindices) - k - 1
             n1 = tempindices[length(tempindices) - k] - j
-            r1 = 1 - pbinom(q1, n1, p) # fix
-            # 
+            r1 = pbinom(q1, n1, p, log=TRUE) # r1 = 1 - pbinom(q1, n1, p) #
+            # calculate probability of q-k-1 events
             q2 = length(tempindices) - k - 2
             n2 = tempindices[length(tempindices) - k - 1] - j
-            r2 = 1 - pbinom(q2, n2, p) # fix
-            # 
-            if (r2 <= r1){ # fix?
+            r2 = pbinom(q2, n2, p, log=TRUE) # r2 = 1 - pbinom(q2, n2, p) #
+            # if the probability is reduced (log probabilty greater) keep reducing window
+            if (r2 > r1){ # (r2 <= r1)
               k = k + 1
-            # 
+            # otherwise stop with current values
             } else {
               break
             }
           }
           
-          # 
+          # get number of events
           q = length(tempindices) - k - 1
-          # 
+          # get size of window
           n = tempindices[length(tempindices) - k] - j
-          # 
-          sigval = 1 - pbinom(q, n, p) # does need fixing to avoid underflow (convert to log and back)
-          # 
-          tempvector[[j]] = c(i, j, tempindices[length(tempindices) - k], q+1, n, sigval)
-          # 
+          # get log probability
+          logsigval = pbinom(q, n, p, log=TRUE) # to reduce underflow
+          # temporarily store results
+          tempvector[[j]] = c(i, j, tempindices[length(tempindices) - k], q+1, n, 1 - exp(logsigval))
+          # update result count
           innertempcount = innertempcount + 1
-          # 
+          # update left bound marker to just after former right bound
           j = tempindices[q + 1] + 1
-          # 
         
         # if not below significance threshold
         } else {
