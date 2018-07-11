@@ -29,14 +29,13 @@ rbn.permute = function(partitions, sig){
           # calculate n
           n = indices[j+k] - indices[j] + 1
           # calculate the probability of k+1 or more events
-          r = 1 - pbinom(k, n, p) # fix
+          r = pbinom(k, n, p, log=TRUE) # r = 1 - pbinom(k, n, p)
           # if probability below significance threshold:
-          if (r <= sig){ # fix
-            # minor issue but ordering of lines inconsistent between tests
+          if (r > log(1 - sig)){ # (r1 <= sig)
+            # store event details
+            tempvector[[innertempcount]] = c(i, indices[j], indices[j + k], k + 1, n, 1 - exp(r)) # log(1-r)
             # update rbn event count
             innertempcount = innertempcount + 1
-            # store event details (r needs recalculating)
-            tempvector[[innertempcount]] = c(i, indices[j], indices[j + k], k + 1, n, r)
           }
         }
       }
