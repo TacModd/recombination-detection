@@ -1,7 +1,6 @@
 # implements (advanced) user set window method
-# note does not work well in practise - perhaps consider
-# changing implementation to testing genome length/n times
-# and shift bounds from there?
+# note does not appear to work well in practise 
+# - requires further testing
 
 rbn.usercomplex = function(partitions, sig, n){
   # initialise results object
@@ -26,31 +25,29 @@ rbn.usercomplex = function(partitions, sig, n){
       while (j < indices[length(indices)]){
         # get indices between j and j + user window size
         tempindices = which(partitions$pattern.indices[j:(j+n-1)] == i)
-        # correct index values (above values from 1)
+        # correct index values (above values start from 1 but should start from j)
         tempindices = tempindices + j - 1
         # get the number of 'events' (partitions) within window
-        q = length(tempindices) - 1
+        k = length(tempindices)
         # calculate the probability of k or more events
-        r1 = pbinom(q, n, p, log=TRUE) # r1 = 1 - pbinom(q, n, p) # make q vs k consistent
+        r1 = pbinom(k-1, n, p, log=TRUE) # r1 = 1 - pbinom(1, n, p) #
         # if probability below significance threshold:
-        if (r1 > log(1 - sig) & q > 0){ # (r1 <= sig & q > 0) # make q vs k consistent
+        if (r1 > log(1 - sig) & k > 1){ # (r1 <= sig & k > 1) #
           # set a counter
-          k = 0
-          # get the number of events minus k
-          q1 = length(tempindices) - k - 1
-          # while there are at least 4(?) events
-          while (q1 > 2){
-            # calculate probability of q-k events
-            q1 = length(tempindices) - k - 1
-            n1 = tempindices[length(tempindices) - k] - j
-            r1 = pbinom(q1, n1, p, log=TRUE) # r1 = 1 - pbinom(q1, n1, p) #
-            # calculate probability of q-k-1 events
-            q2 = length(tempindices) - k - 2
-            n2 = tempindices[length(tempindices) - k - 1] - j
-            r2 = pbinom(q2, n2, p, log=TRUE) # r2 = 1 - pbinom(q2, n2, p) #
-            # if the probability is reduced (log probabilty greater) keep reducing window
-            if (r2 > r1){ # (r2 <= r1)
-              k = k + 1
+          q = 0
+          # while there are at least 3 events
+          while (k > 2){
+            # update the number of events
+            k = length(tempindices) - q
+            # calculate probability of k-q events
+            n1 = tempindices[length(tempindices) - q] - j
+            r1 = pbinom(k-1, n1, p, log=TRUE) # r1 = 1 - pbinom(k-1, n1, p) #
+            # calculate probability of k-q-1 events
+            n2 = tempindices[length(tempindices) - q - 1] - j
+            r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
+            # if the probability is reduced keep shrinking window
+            if (r2 > r1){ # (r2 <= r1) #
+              q = q + 1
             # otherwise stop with current values
             } else {
               break
@@ -58,17 +55,17 @@ rbn.usercomplex = function(partitions, sig, n){
           }
           
           # get number of events
-          q = length(tempindices) - k - 1
+          k = length(tempindices) - q
           # get size of window
-          n = tempindices[length(tempindices) - k] - j
+          n = tempindices[length(tempindices) - q] - j
           # get log probability
-          logsigval = pbinom(q, n, p, log=TRUE) # to reduce underflow
+          logsigval = pbinom(k-1, n, p, log=TRUE) # to reduce underflow
           # temporarily store results
-          tempvector[[j]] = c(i, j, tempindices[length(tempindices) - k], q+1, n, 1 - exp(logsigval))
+          tempvector[[j]] = c(i, j, tempindices[length(tempindices) - q], k, n, 1 - exp(logsigval)) # log(1-logsigval)
           # update result count
           innertempcount = innertempcount + 1
           # update left bound marker to just after former right bound
-          j = tempindices[q + 1] + 1
+          j = tempindices[k] + 1
         
         # if not below significance threshold
         } else {
@@ -90,10 +87,10 @@ rbn.usercomplex = function(partitions, sig, n){
       }
       # initialise matrix to store results for ith partition
       tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
-      # reset rbn event count (line should go below check?)
-      innertempcount = 1
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
+        # reset rbn event count
+        innertempcount = 1
         # for each event:
         for (j in 1:length(tempvector)){
           # if the event is not null (is this check necessary??):
