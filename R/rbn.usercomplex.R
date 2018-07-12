@@ -61,10 +61,10 @@ rbn.usercomplex = function(partitions, sig, n){
           n = tempindices[length(tempindices) - q] - j
           # get log probability
           logsigval = pbinom(k-1, n, p, log=TRUE) # to reduce underflow
-          # temporarily store results
-          tempvector[[j]] = c(i, j, tempindices[length(tempindices) - q], k, n, 1 - exp(logsigval)) # log(1-logsigval)
           # update result count
           innertempcount = innertempcount + 1
+          # temporarily store results
+          tempvector[[innertempcount]] = c(i, j, tempindices[length(tempindices) - q], k, n, 1 - exp(logsigval)) # log(1-logsigval)
           # update left bound marker to just after former right bound
           j = tempindices[k] + 1
         
