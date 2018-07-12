@@ -29,11 +29,11 @@ rbn.userbasic = function(partitions, sig, n){
         # get the number of 'events' (partitions) within window
         k = length(tempindices)
         # calculate the probability of k or more events
-        r1 = pbinom(k-1, n, p, log=TRUE) # 1 - pbinom(k-1, n, p)
+        r = pbinom(k-1, n, p, log=TRUE) # 1 - pbinom(k-1, n, p)
         # if probability below significance threshold:
-        if (r1 > log(1 - sig) & k > 1){ # (r1 <= sig & k > 0); k > 1 necessary?
+        if (r > log(1 - sig) & k > 1){ # (r1 <= sig & k > 0); k > 1 necessary?
           # store event details
-          tempvector[[j]] = c(i, j, tempindices[length(tempindices)], k, n, 1 - exp(r1)) # log(1-r1)
+          tempvector[[j]] = c(i, j, tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
           # update rbn event count
           innertempcount = innertempcount + 1
           # update left bound marker
