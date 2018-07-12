@@ -32,7 +32,8 @@ par(mfrow = c(1, 2))
 image(concatenated)
 
 pttns = patterns(concatenated)
-pttns = sapply(1:ncol(pttns), function(x) paste(pttns[, x], collapse = ''))
+# this line should be added in to the get.patterns function, no reason to keep them separate
+# pttns = sapply(1:ncol(pttns), function(x) paste(pttns[, x], collapse = ''))
 ptns = partitions(pttns)
 
 m = matrix(ptns$pattern.indices, nrow = length(ptns$pattern.indices), ncol = nchar(ptns$patterns[1]), byrow = FALSE)
