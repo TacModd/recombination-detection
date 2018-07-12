@@ -1,4 +1,3 @@
-
 # takes a partition object and a desired significance threshold
 # for each partition generates an initial window, then if window
 # significant attempts to expand window to reduce likelihood
