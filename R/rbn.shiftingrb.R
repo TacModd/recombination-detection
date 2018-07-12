@@ -54,10 +54,10 @@ rbn.shiftingrb = function(partitions, sig){
           n = indices[k]-indices[j]+1
           # get log probability
           logsigval = pbinom((k-j), n, p, log=TRUE)
-          # store event details
-          tempvector[[j]] = c(i, indices[j], indices[k], k-j+1, n, 1 - exp(logsigval))
           # update rbn event count
           innertempcount = innertempcount + 1
+          # store event details
+          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j+1, n, 1 - exp(logsigval))
           # update left bound marker to partition following right bound marker
           j = j + k
         # if starting window not significant:
