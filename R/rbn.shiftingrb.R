@@ -37,7 +37,7 @@ rbn.shiftingrb = function(partitions, sig){
             # calculate the probability of k-j+2 or more events
             n2 = indices[k+1]-indices[j]+1
             r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
-            # if increasing the window reduces probability
+            # if expanding the window reduces probability
             if (r2 >= r1){ # (r2 <= r1)
               # keep expanding window (via right bound)
               k = k + 1
