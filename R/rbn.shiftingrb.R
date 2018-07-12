@@ -26,7 +26,7 @@ rbn.shiftingrb = function(partitions, sig){
         # calculate probability of 3 or more events
         r1 = pbinom(2, n1, p, log=TRUE) # r1 = 1 - pbinom(2, n1, p) # 
         # probability below significant threshold:
-        if (r1 > log(1 - sig)){ # (r1 <= sig)
+        if (r1 > log(1 - sig)){ # (r1 <= sig) # 
           # set a right bound marker
           k = j+2
           # while we haven't iterated past the last ptn:
@@ -37,9 +37,7 @@ rbn.shiftingrb = function(partitions, sig){
             # calculate the probability of k-j+2 or more events
             n2 = indices[k+1]-indices[j]+1
             r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
-            # note without talking about how equations are arranged saying increases log
-            # probability may cause confusion - consider changing
-            # if increasing the window reduces probability (increases log probability)
+            # if increasing the window reduces probability
             if (r2 >= r1){ # (r2 <= r1)
               # keep expanding window (via right bound)
               k = k + 1
@@ -48,11 +46,11 @@ rbn.shiftingrb = function(partitions, sig){
               break
             }
           }
-          # get the size of the window
+          # get size of window
           n = indices[k]-indices[j]+1
-          # get the log probability
+          # get log probability
           logsigval = pbinom((k-j), n, p, log=TRUE)
-          # # store event details
+          # store event details
           tempvector[[j]] = c(i, indices[j], indices[k], k-j+1, n, 1 - exp(logsigval))
           # update rbn event count
           innertempcount = innertempcount + 1
