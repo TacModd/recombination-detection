@@ -1,5 +1,9 @@
-# just implements the same as rec.testshifingwindows but with a poisson instead of a binomial model
-# still need to convert to log and # comment
+# takes a partition object and a desired significance threshold
+# for each partition generates an initial window, then if window
+# significant attempts to expand window to reduce likelihood
+# further. otherwise starts new window with prior right bound
+# as the new left bound (achieves linear complexity).
+# assumes a poisson (not binomial) distribution.
 
 rbn.shiftingrbP = function(partitions, sig){
   # initialise result object
