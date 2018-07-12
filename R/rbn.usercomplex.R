@@ -45,8 +45,9 @@ rbn.usercomplex = function(partitions, sig, n){
             # calculate probability of k-q-1 events
             n2 = tempindices[length(tempindices) - q - 1] - j
             r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
-            # if the probability is reduced keep shrinking window
+            # if shrinking the window reduces probability
             if (r2 > r1){ # (r2 <= r1) #
+              # keep shrinking window (via right bound)
               q = q + 1
             # otherwise stop with current values
             } else {
