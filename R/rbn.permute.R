@@ -41,10 +41,10 @@ rbn.permute = function(partitions, sig){
       }
       # initialise matrix to store results for ith partition
       tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
-      # reset rbn event count (line should go below check?)
-      innertempcount = 1
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
+        # reset rbn event count
+        innertempcount = 1
         # for each event:
         for (j in 1:length(tempvector)){
           # if the event is not null (is this check necessary??):
