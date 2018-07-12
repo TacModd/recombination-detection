@@ -31,10 +31,10 @@ rbn.shiftingrb = function(partitions, sig){
           k = j+2
           # while we haven't iterated past the last ptn:
           while (k < length(indices)){
-            # calculate the probability of k-j+1 events
+            # calculate the probability of k-j+1 or more events
             n1 = indices[k]-indices[j]+1
             r1 = pbinom((k-j), n1, p, log=TRUE) # r1 = 1 - pbinom((k-j), n1, p) # 
-            # calculate the probability of k-j+2 events
+            # calculate the probability of k-j+2 or more events
             n2 = indices[k+1]-indices[j]+1
             r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
             # note without talking about how equations are arranged saying increases log
@@ -48,7 +48,7 @@ rbn.shiftingrb = function(partitions, sig){
               break
             }
           }
-          # get the number of events
+          # get the size of the window
           n = indices[k]-indices[j]+1
           # get the log probability
           logsigval = pbinom((k-j), n, p, log=TRUE)
