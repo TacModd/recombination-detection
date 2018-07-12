@@ -1,4 +1,9 @@
-# expands right bound while test <= prior test; otherwise right bound forms left bound of new test (linear complexity)
+
+# takes a partition object and a desired significance threshold
+# for each partition generates an initial window, then if window
+# significant attempts to expand window to reduce likelihood
+# further. otherwise starts new window with prior right bound
+# as the new left bound (achieves linear complexity).
 
 rbn.shiftingrb = function(partitions, sig){
   # initialise result object
