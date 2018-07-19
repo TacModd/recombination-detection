@@ -1,5 +1,5 @@
 # takes a multiple alignment (DNAbin) object, a partition object and a result object.
-# masks sites in the multiple alignment object that are recombined 
+# masks partition sites in the multiple alignment object that are recombined 
 # according to result object
 
 mask = function(sequences, partitions, results){
@@ -17,8 +17,8 @@ mask = function(sequences, partitions, results){
       sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
     }
   }
-  # could convert back to list but not necessary (better to leave up to user)
-  # sequences = as.list(sequences)
+  # convert back to list useful for writing as .phy file but the user may not want this
+  #sequences = as.list(sequences)
   # return the masked alignment object
   sequences
 }

@@ -95,12 +95,12 @@ rbn.usercomplex = function(partitions, sig, n){
         # for each event:
         for (j in 1:length(tempvector)){
           # if the event is not null (is this check necessary??):
-          if (!is.null(tempvector[[j]])){
+          #if (!is.null(tempvector[[j]])){
             # add event details to matrix
-            tempmatrix[innertempcount, ] = tempvector[[j]]
+          tempmatrix[innertempcount, ] = tempvector[[j]]
             # update rbn event count
-            innertempcount = innertempcount + 1
-          }
+          innertempcount = innertempcount + 1
+          #}
         }
         # update recombined ptns count
         outertempcount = outertempcount + 1

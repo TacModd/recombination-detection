@@ -57,7 +57,7 @@ rbn.shiftingrbP = function(partitions, sig){
           # update rbn event count
           innertempcount = innertempcount + 1
           # store event details
-          tempvector[[innertempcount]] = c(indices[j], indices[k], k-j, n, sigval)
+          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j, n, sigval)
           # update left bound marker to partition following right bound marker
           j = j + k
         # if starting window not significant:
@@ -67,7 +67,7 @@ rbn.shiftingrbP = function(partitions, sig){
         }
       }
       # initialise matrix to store results for ith partition
-      tempmatrix = matrix(0, nrow=innertempcount, ncol=5)
+      tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
         # reset rbn event count
@@ -75,12 +75,12 @@ rbn.shiftingrbP = function(partitions, sig){
         # for each event:
         for (j in 1:length(tempvector)){
           # if the event is not null (is this check necessary??):
-          if (!is.null(tempvector[[j]])){
+          #if (!is.null(tempvector[[j]])){
             # add event details to matrix
-            tempmatrix[innertempcount, ] = tempvector[[j]]
+          tempmatrix[innertempcount, ] = tempvector[[j]]
             # update rbn event count
-            innertempcount = innertempcount + 1
-          }
+          innertempcount = innertempcount + 1
+          #}
         }
         # update recombined ptns count
         outertempcount = outertempcount + 1
