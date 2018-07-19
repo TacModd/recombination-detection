@@ -1,5 +1,5 @@
 # takes a multiple alignment (DNAbin) object, a partition object and a result object.
-# masks sites in the multiple alignment object that are recombined 
+# masks partition sites in the multiple alignment object that are recombined 
 # according to result object
 
 mask = function(sequences, partitions, results){
