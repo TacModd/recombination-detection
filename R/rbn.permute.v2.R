@@ -67,6 +67,7 @@ rbn.permute.v2 = function(partitions, sig, correction='neither'){
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
         }
+        ### NOTE: may need to check length again in case empty vector returned
         # reset rbn event count
         innertempcount = 1
         # for each event:
