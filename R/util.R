@@ -14,6 +14,7 @@
 # after running tests for each partition:
 #   correct significance by innertempcount
 #   eliminate results before recording them
+### may return empty vector ---> need to build test cases
 
 # call: tempvector = local.bonferroni(tempvector, sig, innertempcount)
 # hypothetical (optional) local correction goes here
