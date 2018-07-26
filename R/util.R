@@ -14,8 +14,12 @@
 # after running tests for each partition:
 #   correct significance by innertempcount
 #   eliminate results before recording them
-### may return empty list ---> need to build test cases
-### confirmed returns empty list if all results eliminated ---> add test cases to demonstrate
+### may return empty list 
+### ---> need to build test cases
+### confirmed returns empty list if all results eliminated
+### ---> add test cases to demonstrate
+### confirmed returns subscript out of bounds if fed an empty list
+### ---> best way to reduce unnecessary checks is to alter calling function
 
 # call: tempvector = local.bonferroni(tempvector, sig, innertempcount)
 # hypothetical (optional) local correction goes here
