@@ -57,8 +57,6 @@ rbn.permute = function(partitions, sig, correction=NULL){
           }
         }
       }
-      # initialise matrix to store results for ith partition
-      tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
       # update all significant events count
       m = m + innertempcount
       # if at least 1 rbn event was found:
@@ -76,6 +74,9 @@ rbn.permute = function(partitions, sig, correction=NULL){
           # clean empty results
           #tempvector = tempvector[lapply(tempvector, length) > 1]
         #}
+        
+        # initialise matrix to store results for ith partition
+        tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
         # reset rbn event count
         innertempcount = 1
         # for each event:
