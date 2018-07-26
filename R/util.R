@@ -25,7 +25,7 @@
 # hypothetical (optional) local correction goes here
 local.bonferroni = function(tempvector, sig, innertempcount){
   # for each result
-  for (x in 1:length(tempvector)){
+  for (x in 1:innertempcount){
     # if result > corrected threshold
     if (tempvector[[x]][6] > sig/innertempcount){
       # remove result
