@@ -21,7 +21,7 @@
 #   eliminate results before recording them
 # (not implemented)
 
-rbn.permute = function(partitions, sig, correction=NULL){
+rbn.permute.v2 = function(partitions, sig, correction='neither'){
   # initialise result object
   results = list()
   # initialise a count value to keep track of recombined partitions
@@ -62,21 +62,15 @@ rbn.permute = function(partitions, sig, correction=NULL){
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
         # hypothetical (optional) local correction goes here
-        #if (!is.null(correction)) {
-          # for each result
-          #for (x in 1:length(tempvector)){
-            # if result > corrected threshold
-            #if (tempvector[[x]][6] > sig/innertempcount){
-              # remove result
-              #tempvector[[x]] = NA
-            #}
-          #}
-          # clean empty results
-          #tempvector = tempvector[lapply(tempvector, length) > 1]
-        #}
-        
+        if (correction == 'local') {
+          tempvector = local.bonferroni(tempvector, sig, innertempcount)
+          # skip rest of loop if 0 results after correction (otherwise continue)
+          if (length(tempvector) == 0){
+            next
+          }
+        }
         # initialise matrix to store results for ith partition
-        tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
+        tempmatrix = matrix(0, nrow=length(tempvector), ncol=6)
         # reset rbn event count
         innertempcount = 1
         # for each event:
@@ -97,28 +91,9 @@ rbn.permute = function(partitions, sig, correction=NULL){
     }
   }
   # run (optional) correction
-  if (!is.null(correction)) {
+  if (correction == 'global') {
     # correct significance threshold
-    sig = sig / m
-    # for each partition
-    for (x in 1:length(results)){
-      # for each result
-      for (y in 1:(length(results[[x]])/6)){
-        # if result > new threshold
-        if (results[[x]][y, 6] > sig){
-          # remove result
-          results [[x]][y, ] = NA
-        }
-      }
-      # clean empty results
-      results[[x]] = na.omit(results[[x]])
-      # remove empty matrices
-      if (all(is.na(results[[x]][, 1]))){
-        results[[x]] = NA
-      }
-    }
-    # clean empty partitions (matrices)
-    results = results[lapply(results, length) > 1]
+    results = global.bonferroni(results, sig, m)
   }
   # return result object
   results
