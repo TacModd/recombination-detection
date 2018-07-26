@@ -57,8 +57,6 @@ rbn.permute.v2 = function(partitions, sig, correction='neither'){
           }
         }
       }
-      # initialise matrix to store results for ith partition
-      tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
       # update all significant events count
       m = m + innertempcount
       # if at least 1 rbn event was found:
@@ -66,8 +64,13 @@ rbn.permute.v2 = function(partitions, sig, correction='neither'){
         # hypothetical (optional) local correction goes here
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
+          # skip rest of loop if 0 results after correction (otherwise continue)
+          if (length(tempvector) == 0){
+            next
+          }
         }
-        ### NOTE: may need to check length again in case empty vector returned
+        # initialise matrix to store results for ith partition
+        tempmatrix = matrix(0, nrow=length(tempvector), ncol=6)
         # reset rbn event count
         innertempcount = 1
         # for each event:
