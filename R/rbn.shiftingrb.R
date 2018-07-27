@@ -66,21 +66,18 @@ rbn.shiftingrb = function(partitions, sig){
           j = j + 1
         }
       }
-      # initialise matrix to store results for ith partition
-      tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
+        # initialise matrix to store results for ith partition
+        tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
         # reset rbn event count
         innertempcount = 1
         # for each event:
         for (j in 1:length(tempvector)){
-          # if the event is not null (is this check necessary??):
-          #if (!is.null(tempvector[[j]])){
-            # add event details to matrix
+          # add event details to matrix
           tempmatrix[innertempcount, ] = tempvector[[j]]
-            # update rbn event count
+          # update rbn event count
           innertempcount = innertempcount + 1
-          #}
         }
         # update recombined ptns count
         outertempcount = outertempcount + 1
