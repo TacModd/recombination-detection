@@ -5,23 +5,21 @@
 # those bounds, assuming a binomial distribution
 # returns a result object (a list of matrices)
 
-# adding familywise error correction (bonferroni)
-##########   implementation strategy:   ##########
-# 'global' correction
+# includes options for local and global based bonferroni correction
+
+##########   'global' specification:   ##########
 # after running all tests:
 #   m = count significant tests
 #   divide initial significance by m to get new threshold
-#   how to eliminate results that don't pass new threshold?
+#   eliminate results that don't pass new threshold
 # (due to number of results this strategy may be too conservative)
 
-#########   alternative specification:   #########
-# 'local' correction
+##########   'local' specification:    ##########
 # after running tests for each partition:
 #   correct significance by innertempcount
 #   eliminate results before recording them
-# (not implemented)
 
-rbn.permute.v2 = function(partitions, sig, correction='neither'){
+rbn.permute = function(partitions, sig, correction='neither'){
   # initialise result object
   results = list()
   # initialise a count value to keep track of recombined partitions
@@ -75,13 +73,10 @@ rbn.permute.v2 = function(partitions, sig, correction='neither'){
         innertempcount = 1
         # for each event:
         for (j in 1:length(tempvector)){
-          # if the event is not null (is this check necessary??):
-          #if (!is.null(tempvector[[j]])){
-            # add event details to matrix
+          # add event details to matrix
           tempmatrix[innertempcount, ] = tempvector[[j]]
-            # update rbn event count
+          # update rbn event count
           innertempcount = innertempcount + 1
-          #}
         }
         # update recombined ptns count
         outertempcount = outertempcount + 1
