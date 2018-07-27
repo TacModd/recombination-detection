@@ -1,3 +1,5 @@
+### deprecated
+
 # takes a partition object and a desired significance threshold
 # for each partition generates all possible permutations of
 # windows using the ith partition's sites as bounds, then
