@@ -6,16 +6,21 @@
 # assumes a poisson (not binomial) distribution.
 
 rbn.shiftingrbP = function(partitions, sig, correction='neither'){
+  
+  ### initialise global variables
   # initialise result object
   results = list()
   # initialise a count value to keep track of recombined partitions
   outertempcount = 0
   # initialise a count value to keep track of all significant events
   m = 0
-  # for each unique partition ID:
+  
+  ### for each unique partition ID:
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 3 partitions belonging to said ID:
     if (partitions$pattern.counts[i] > 2){
+      
+      ### initialise variables for partition
       # get the partition indices
       indices = which(partitions$pattern.indices == i)
       # get the partition probability
@@ -26,6 +31,8 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
       tempvector = list()
       # initialise a left bound marker
       j = 1
+      
+      ### identify recombination events
       # while we haven't iterated past the 2nd last ptn:
       while (j < (length(indices)-1)){
         # calculate window size to include 3 partitions
@@ -70,9 +77,11 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
       }
       # update all significant events count
       m = m + innertempcount
+      
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
-        # run (optional) local correction
+        
+        ### run (optional) local correction
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
           # skip rest of loop if 0 results after correction (otherwise continue)
@@ -80,6 +89,8 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
             next
           }
         }
+        
+        ### store results
         # initialise matrix to store results for ith partition
         tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
         # reset rbn event count
@@ -98,11 +109,13 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
       }
     }
   }
-  # run (optional) global correction
+  
+  ### run (optional) global correction
   if (correction == 'global') {
     # correct significance threshold
     results = global.bonferroni(results, sig, m)
   }
-  # return result object
+  
+  ### return result object
   results
 }
