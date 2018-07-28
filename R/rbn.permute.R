@@ -20,16 +20,21 @@
 #   eliminate results before recording them
 
 rbn.permute = function(partitions, sig, correction='neither'){
+  
+  ### initialise global variables
   # initialise result object
   results = list()
   # initialise a count value to keep track of recombined partitions
   outertempcount = 0
   # initialise a count value to keep track of all significant events
   m = 0
-  # for each unique partition ID:
+  
+  ### for each unique partition ID:
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 2 partitions belonging to said ID:
     if (partitions$pattern.counts[i] > 1){
+      
+      ### initialise variables for partition
       # get the partition indices
       indices = which(partitions$pattern.indices == i)
       # get the partition probability
@@ -38,6 +43,8 @@ rbn.permute = function(partitions, sig, correction='neither'){
       innertempcount = 0
       # initalise a vector to temporarily store event details
       tempvector = list()
+      
+      ### identify recombination events
       # for each possible ptn index as left bound:
       for (j in 1:(length(indices) - 1)){
         # for each possible ptn index as right bound:
@@ -57,9 +64,11 @@ rbn.permute = function(partitions, sig, correction='neither'){
       }
       # update all significant events count
       m = m + innertempcount
+      
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
-        # run (optional) local correction
+        
+        ### run (optional) local correction
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
           # skip rest of loop if 0 results after correction (otherwise continue)
@@ -67,6 +76,8 @@ rbn.permute = function(partitions, sig, correction='neither'){
             next
           }
         }
+        
+        ### store results
         # initialise matrix to store results for ith partition
         tempmatrix = matrix(0, nrow=length(tempvector), ncol=6)
         # reset rbn event count
@@ -85,11 +96,13 @@ rbn.permute = function(partitions, sig, correction='neither'){
       }
     }
   }
-  # run (optional) global correction
+  
+  ### run (optional) global correction
   if (correction == 'global') {
     # correct significance threshold
     results = global.bonferroni(results, sig, m)
   }
-  # return result object
+  
+  ### return result object
   results
 }
