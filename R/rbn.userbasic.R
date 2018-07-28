@@ -1,10 +1,12 @@
 # implements (basic) user set window method
 
-rbn.userbasic = function(partitions, sig, n){
+rbn.userbasic = function(partitions, sig, n, correction='neither'){
   # initialise results object
   results = list()
   # initialise a count value to keep track of recombined partitions
   outertempcount = 0
+  # initialise a count value to keep track of all significant events
+  m = 0
   # for each unique partition ID:
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 3 partitions belonging to said ID:
@@ -47,8 +49,18 @@ rbn.userbasic = function(partitions, sig, n){
           j = j + n
         }
       }
+      # update all significant events count
+      m = m + innertempcount
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
+        # run (optional) local correction
+        if (correction == 'local') {
+          tempvector = local.bonferroni(tempvector, sig, innertempcount)
+          # skip rest of loop if 0 results after correction (otherwise continue)
+          if (length(tempvector) == 0){
+            next
+          }
+        }
         # initialise matrix to store results for ith partition
         tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
         # reset rbn event count
@@ -66,6 +78,11 @@ rbn.userbasic = function(partitions, sig, n){
         results[[outertempcount]] = tempmatrix
       }
     }
+  }
+  # run (optional) global correction
+  if (correction == 'global') {
+    # correct significance threshold
+    results = global.bonferroni(results, sig, m)
   }
   # return result object
   results
