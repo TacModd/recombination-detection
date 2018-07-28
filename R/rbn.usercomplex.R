@@ -3,16 +3,21 @@
 # - requires further testing
 
 rbn.usercomplex = function(partitions, sig, n, correction='neither'){
+  
+  ### initialise global variables
   # initialise results object
   results = list()
   # initialise a count value to keep track of recombined partitions
   outertempcount = 0
   # initialise a count value to keep track of all significant events
   m = 0
-  # for each unique partition ID:
+  
+  ### for each unique partition ID:
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 3 partitions belonging to said ID:
     if (partitions$pattern.counts[i] > 2){
+      
+      ### identify recombination events
       # get the partition indices
       indices = which(partitions$pattern.indices == i)
       # get the partition probability
@@ -90,9 +95,11 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither'){
       }
       # update all significant events count
       m = m + innertempcount
+      
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
-        # run (optional) local correction
+        
+        ### run (optional) local correction
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
           # skip rest of loop if 0 results after correction (otherwise continue)
@@ -100,6 +107,8 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither'){
             next
           }
         }
+        
+        ### store results
         # initialise matrix to store results for ith partition
         tempmatrix = matrix(0, nrow=innertempcount, ncol=6)
         # reset rbn event count
@@ -118,11 +127,13 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither'){
       }
     }
   }
-  # run (optional) global correction
+  
+  ### run (optional) global correction
   if (correction == 'global') {
     # correct significance threshold
     results = global.bonferroni(results, sig, m)
   }
-  # return result object
+  
+  ### return result object
   results
 }
