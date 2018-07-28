@@ -59,7 +59,7 @@ rbn.permute = function(partitions, sig, correction='neither'){
       m = m + innertempcount
       # if at least 1 rbn event was found:
       if (length(tempvector) > 0){
-        # hypothetical (optional) local correction goes here
+        # run (optional) local correction
         if (correction == 'local') {
           tempvector = local.bonferroni(tempvector, sig, innertempcount)
           # skip rest of loop if 0 results after correction (otherwise continue)
@@ -85,7 +85,7 @@ rbn.permute = function(partitions, sig, correction='neither'){
       }
     }
   }
-  # run (optional) correction
+  # run (optional) global correction
   if (correction == 'global') {
     # correct significance threshold
     results = global.bonferroni(results, sig, m)
