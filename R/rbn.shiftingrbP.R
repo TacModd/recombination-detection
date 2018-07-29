@@ -62,11 +62,11 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
           # get the size of the window
           n = indices[k]-indices[j]
           # get the (log) probability 
-          sigval = 1 - ppois((k-j), n*p) # logsigval = ppois((k-j), n*p, log=TRUE)
+          logsigval = ppois((k-j), n*p, log=TRUE) # sigval = 1 - ppois((k-j), n*p) 
           # update rbn event count
           innertempcount = innertempcount + 1
           # store event details
-          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j, n, sigval)
+          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j, n, 1 - exp(logsigval))
           # update left bound marker to partition following right bound marker
           j = j + k
         # if starting window not significant:
