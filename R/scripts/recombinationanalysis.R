@@ -77,6 +77,20 @@ length(my_recombined_sites[my_recombined_sites %in% GC2_recombined_sites])
 # so then we might want to look at how both sets distribute across the genomes and 
 # across partitions.
 
-#
+# the following function is a basic means to plot the distribution of recombination across
+# the genome, but it isn't very informative
+
+plot.arr = function(partitions, int.arr){
+  # plot an empty frame the length of the genome
+  plot(1, type='n', ylim = c(-1, 1), xlim = c(1, length(partitions$pattern.indices)), 
+       yaxt='n', xlab='Recombination positions in genome', ylab='')
+  # plot sites
+  points(int.arr, c(rep(0, length(int.arr))), col='red', pch = 19)
+}
+
+plot.arr(GC2ptns, GC2_recombined_sites)
+plot.arr(GC2ptns, my_recombined_sites)
+
+# to look at the distribution across partitions, we can try using a histogram
 
 
