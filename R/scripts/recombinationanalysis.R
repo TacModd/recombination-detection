@@ -93,4 +93,35 @@ plot.arr(GC2ptns, my_recombined_sites)
 
 # to look at the distribution across partitions, we can try using a histogram
 
+# get the partitions for each recombined site
+GC2_rbn_ptns = GC2ptns$pattern.indices[GC2_recombined_sites]
 
+# get counts for the number of each recombined partition
+GC2_rbn_ptns_counts = sort(table(GC2_rbn_ptns), decreasing = T)
+GC2_rbn_ptns_counts[1:20] # <-- most common partitions
+
+# my recombined sites
+my_rbn_ptns = GC2ptns$pattern.indices[hmm]
+
+# get counts again
+my_rbn_ptns_counts = sort(table(my_rbn_ptns), decreasing = T)
+my_rbn_ptns_counts[1:20] # <-- most common partitions
+
+length(my_rbn_ptns_counts) # <-- 646
+length(GC2_rbn_ptns_counts) # <-- 771
+
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 451
+length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0
+
+# comparing the above tables reveals the degree of overlap between
+# the most common partitions for each set. it seems that the baseline
+# results are much more densely concentrated within just a few common
+# partitions, whereas my results are much more evenly spread amongst
+# partitions
+
+# it is also interesting to note that quite a lot of partitions for the
+# baseline results have only one recombining member - a physical impossibility
+# using at least some of my methods. assuming these partitions are important 
+# (which can be tested) this may represent an upper bound on what accuracy is 
+# achievable using binomial tests of spatial distribution, and perhaps for 
+# poisson tests as well. 451/9926 is a fair chunk (about 4.5%).
