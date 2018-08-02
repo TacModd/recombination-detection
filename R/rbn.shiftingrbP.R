@@ -38,7 +38,7 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
         # calculate window size to include 3 partitions
         n1 = indices[j+2]-indices[j]+1
         # calculate probability of 3 or more events
-        r1 = 1 - ppois(2, n1*p) # r1 = ppois(2, n1*p, log=TRUE) #
+        r1 = ppois(2, n1*p, log=TRUE) # r1 = 1 - ppois(2, n1*p) #
         if (r1 <= sig){ # (r1 > log(1 - sig)) #
           # set a right bound marker
           k = j+2
@@ -46,10 +46,10 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
           while (k < length(indices)){
             # calculate the probability of k-j+1 events
             n1 = indices[k]-indices[j]
-            r1 = 1 - ppois((k-j), n1*p) # r1 = ppois((k-j), n1*p, log=TRUE) #
+            r1 = ppois((k-j), n1*p, log=TRUE) # r1 = 1 - ppois((k-j), n1*p) #
             # calculate the probability of k-j+2 events
             n2 = indices[k+1]-indices[j]
-            r2 = 1 - ppois((k-j+1), n2*p) # r1 = ppois((k-j+1), n1*p, log=TRUE) #
+            r2 = ppois((k-j+1), n2*p, log=TRUE) # r2 = 1 - ppois((k-j+1), n2*p) #
             # if expanding the window size reduces probability:
             if (r2 <= r1){ # (r2 >= r1) #
               # keep expanding window (via right bound)
