@@ -144,5 +144,7 @@ GC2m = as.matrix(GC2d)
 
 GC2m[, GC2_rbn_sites_revised] = as.DNAbin('n')
 
+GC2m = as.list(GC2m)
+
 # write and we are ready to phyml
 
