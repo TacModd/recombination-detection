@@ -2,7 +2,7 @@
 # masks partition sites in the multiple alignment object that are recombined 
 # according to result object
 
-mask = function(sequences, partitions, results){
+mask = function(sequences, partitions, results, aslist=T){
   # convert sequences to matrix in case sequences in list format
   sequences = as.matrix(sequences)
   # for each recombined partition:
@@ -18,7 +18,9 @@ mask = function(sequences, partitions, results){
     }
   }
   # convert back to list useful for writing as .phy file but the user may not want this
-  #sequences = as.list(sequences)
+  if (aslist){
+    sequences = as.list(sequences)
+  }
   # return the masked alignment object
   sequences
 }
