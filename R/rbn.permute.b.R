@@ -19,7 +19,7 @@
 #   correct significance by innertempcount
 #   eliminate results before recording them
 
-rbn.permute = function(partitions, sig, correction='neither'){
+rbn.permute.b = function(partitions, sig, correction='neither'){
   
   ### initialise global variables
   # initialise result object
