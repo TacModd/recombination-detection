@@ -4,7 +4,7 @@
 # further. otherwise starts new window with prior right bound
 # as the new left bound (achieves linear complexity).
 
-rbn.shiftingrb = function(partitions, sig, correction='neither'){
+rbn.shiftingrb.b = function(partitions, sig, correction='neither'){
   
   ### initialise global variables
   # initialise result object
