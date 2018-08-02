@@ -125,3 +125,24 @@ length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0
 # (which can be tested) this may represent an upper bound on what accuracy is 
 # achievable using binomial tests of spatial distribution, and perhaps for 
 # poisson tests as well. 451/9926 is a fair chunk (about 4.5%).
+
+# so to test the relevance of these sites we need to remove them from the list
+# and then mask the remaining sites
+
+# partitions with only 1 recombined member
+ptns_to_remove = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]
+# removing them
+GC2_rbn_ptns_revised = 
+  GC2_rbn_ptns[!GC2_rbn_ptns %in% 
+                 as.integer(names(ptns_to_remove))]
+# sites
+sites_to_remove = which(!GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
+
+GC2_rbn_sites_revised = GC2_recombined_sites[sites_to_remove]
+
+GC2m = as.matrix(GC2d)
+
+GC2m[, GC2_rbn_sites_revised] = as.DNAbin('n')
+
+# write and we are ready to phyml
+
