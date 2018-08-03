@@ -161,3 +161,5 @@ GC2m = as.list(GC2m)
 
 # write and we are ready to phyml
 
+
+# after results come through next thing on the agenda is checking partition patterns (1/2s vs 1/2/3/4s)
