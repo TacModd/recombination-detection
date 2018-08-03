@@ -19,7 +19,7 @@
 #   correct significance by innertempcount
 #   eliminate results before recording them
 
-rbn.permuteP = function(partitions, sig, correction='neither'){
+rbn.permute.P = function(partitions, sig, correction='neither'){
   
   ### initialise global variables
   # initialise result object
@@ -50,15 +50,16 @@ rbn.permuteP = function(partitions, sig, correction='neither'){
         # for each possible ptn index as right bound:
         for (k in 1:(length(indices) - j)){
           # calculate n
-          n = indices[j+k] - indices[j] + 1
-          # calculate the probability of k+1 or more events
-          r = ppois(k, n*p, log=TRUE) # r = 1 - ppois(k, n*p) #
+          n = indices[j+k] - indices[j] + 0 # + 1
+          # calculate the probability of k or more events # k + 1
+          r = ppois(k-1, n*p, log=TRUE) # r = 1 - ppois(k-1, n*p) # k
           # if probability below significance threshold:
           if (r > log(1 - sig)){ # (r1 <= sig) #
             # update rbn event count
             innertempcount = innertempcount + 1
             # store event details
-            tempvector[[innertempcount]] = c(i, indices[j], indices[j + k], k + 1, n, 1 - exp(r)) # log(1-r)
+            tempvector[[innertempcount]] = c(i, indices[j] + 1, indices[j + k], k, n, 1 - exp(r)) # log(1-r) # indices[j]; k + 1
+            # necessarily we don't include the left bound in the detected event - but then detecting the first ptn is impossible
           }
         }
       }
