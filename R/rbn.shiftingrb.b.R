@@ -68,7 +68,7 @@ rbn.shiftingrb.b = function(partitions, sig, correction='neither'){
           # store event details
           tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j+1, n, 1 - exp(logsigval))
           # update left bound marker to partition following right bound marker
-          j = j + k
+          j = j + k + 1
         # if starting window not significant:
         } else {
           # update left bound to next partition
