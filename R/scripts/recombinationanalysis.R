@@ -126,19 +126,32 @@ length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0
 # achievable using binomial tests of spatial distribution, and perhaps for 
 # poisson tests as well. 451/9926 is a fair chunk (about 4.5%).
 
-# so to test the relevance of these sites we need to remove them from the list
-# and then mask the remaining sites
-
-# partitions with only 1 recombined member
+# partitions with only 1 recombining member according to baseline results
 ptns_to_remove = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]
-# removing them
+# all the recombining partitions EXCLUDING those partitions
 GC2_rbn_ptns_revised = 
   GC2_rbn_ptns[!GC2_rbn_ptns %in% 
                  as.integer(names(ptns_to_remove))]
-# sites
-sites_to_remove = which(!GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
+# site indices with only 1 recombining member according to baseline results
+indices_to_remove = which(GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
+# site indices with more than 1 recombining member according to baseline results
+indices_to_remain = which(!GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
+# all the recombining sites EXCLUDING the sites with only 1 recombining member
+GC2_rbn_sites_revised = GC2_recombined_sites[indices_to_remain]
 
-GC2_rbn_sites_revised = GC2_recombined_sites[sites_to_remove]
+# some more investigation reveals these are in fact all partitions for which 
+# only one member exists - no matter how we specify a spatial test, we could 
+# never detect these, so checking their relevance becomes even more important
+
+solitary_ptn_sites = GC2_recombined_sites[!GC2_recombined_sites %in% GC2_rbn_sites_revised]
+solitary_rbnd_ptns = GC2ptns$pattern.indices[solitary_ptn_sites]
+solitary_rbnd_ptns
+length(solitary_rbnd_ptns)
+unique(solitary_rnbd_ptns)
+length(unique(solitary_rnbd_ptns))
+
+# so to test the relevance of these sites we need to remove them from the list
+# and then mask the remaining sites
 
 GC2m = as.matrix(GC2d)
 
@@ -148,3 +161,5 @@ GC2m = as.list(GC2m)
 
 # write and we are ready to phyml
 
+
+# after results come through next thing on the agenda is checking partition patterns (1/2s vs 1/2/3/4s)

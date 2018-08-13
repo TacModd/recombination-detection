@@ -2,7 +2,7 @@
 # for each partition generates all possible permutations of
 # windows using the ith partition's sites as bounds, then
 # calculates probability of k + 1 sites or more sampled within
-# those bounds, assuming a Poisson distribution
+# those bounds, assuming a binomial distribution
 # returns a result object (a list of matrices)
 
 # includes options for local and global based bonferroni correction
@@ -19,7 +19,7 @@
 #   correct significance by innertempcount
 #   eliminate results before recording them
 
-rbn.permuteP = function(partitions, sig, correction='neither'){
+rbn.permute.b = function(partitions, sig, correction='neither'){
   
   ### initialise global variables
   # initialise result object
@@ -52,7 +52,7 @@ rbn.permuteP = function(partitions, sig, correction='neither'){
           # calculate n
           n = indices[j+k] - indices[j] + 1
           # calculate the probability of k+1 or more events
-          r = ppois(k, n*p, log=TRUE) # r = 1 - ppois(k, n*p) #
+          r = pbinom(k, n, p, log=TRUE) # r = 1 - pbinom(k, n, p) #
           # if probability below significance threshold:
           if (r > log(1 - sig)){ # (r1 <= sig) #
             # update rbn event count

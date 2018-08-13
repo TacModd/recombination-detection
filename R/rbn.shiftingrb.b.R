@@ -3,9 +3,8 @@
 # significant attempts to expand window to reduce likelihood
 # further. otherwise starts new window with prior right bound
 # as the new left bound (achieves linear complexity).
-# assumes a poisson (not binomial) distribution.
 
-rbn.shiftingrbP = function(partitions, sig, correction='neither'){
+rbn.shiftingrb.b = function(partitions, sig, correction='neither'){
   
   ### initialise global variables
   # initialise result object
@@ -27,7 +26,7 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
       p = length(indices)/length(partitions$pattern.indices)
       # initialise a count value to keep track of detected rbn events
       innertempcount = 0
-      # initialise a vector to temporarily store event details
+      # initalise a vector to temporarily store event details
       tempvector = list()
       # initialise a left bound marker
       j = 1
@@ -38,20 +37,21 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
         # calculate window size to include 3 partitions
         n1 = indices[j+2]-indices[j]+1
         # calculate probability of 3 or more events
-        r1 = ppois(2, n1*p, log=TRUE) # r1 = 1 - ppois(2, n1*p) #
-        if (r1 <= sig){ # (r1 > log(1 - sig)) #
+        r1 = pbinom(2, n1, p, log=TRUE) # r1 = 1 - pbinom(2, n1, p) # 
+        # probability below significant threshold:
+        if (r1 > log(1 - sig)){ # (r1 <= sig) # 
           # set a right bound marker
           k = j+2
           # while we haven't iterated past the last ptn:
           while (k < length(indices)){
-            # calculate the probability of k-j+1 events
-            n1 = indices[k]-indices[j]
-            r1 = ppois((k-j), n1*p, log=TRUE) # r1 = 1 - ppois((k-j), n1*p) #
-            # calculate the probability of k-j+2 events
-            n2 = indices[k+1]-indices[j]
-            r2 = ppois((k-j+1), n2*p, log=TRUE) # r2 = 1 - ppois((k-j+1), n2*p) #
-            # if expanding the window size reduces probability:
-            if (r2 <= r1){ # (r2 >= r1) #
+            # calculate the probability of k-j+1 or more events
+            n1 = indices[k]-indices[j]+1
+            r1 = pbinom((k-j), n1, p, log=TRUE) # r1 = 1 - pbinom((k-j), n1, p) # 
+            # calculate the probability of k-j+2 or more events
+            n2 = indices[k+1]-indices[j]+1
+            r2 = pbinom((k-j+1), n2, p, log=TRUE) # r2 = 1 - pbinom((k-j+1), n2, p) # 
+            # if expanding the window reduces probability
+            if (r2 >= r1){ # (r2 <= r1)
               # keep expanding window (via right bound)
               k = k + 1
             # otherwise stop and start a new window
@@ -59,16 +59,16 @@ rbn.shiftingrbP = function(partitions, sig, correction='neither'){
               break
             }
           }
-          # get the size of the window
-          n = indices[k]-indices[j]
-          # get the (log) probability 
-          logsigval = ppois((k-j), n*p, log=TRUE) # sigval = 1 - ppois((k-j), n*p) 
+          # get size of window
+          n = indices[k]-indices[j]+1
+          # get log probability
+          logsigval = pbinom((k-j), n, p, log=TRUE)
           # update rbn event count
           innertempcount = innertempcount + 1
           # store event details
-          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j, n, 1 - exp(logsigval))
+          tempvector[[innertempcount]] = c(i, indices[j], indices[k], k-j+1, n, 1 - exp(logsigval))
           # update left bound marker to partition following right bound marker
-          j = j + k
+          j = j + k + 1
         # if starting window not significant:
         } else {
           # update left bound to next partition
