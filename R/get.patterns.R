@@ -1,7 +1,7 @@
-# takes a multiple aligned sequence object and generates integer 
-# sequences (patterns) representing columns of sites: these patterns 
-# reflect the pattern of site base variation across DNA sequences. 
-# returns a pattern object.
+# takes a multiple aligned sequence object (as a matrix) and generates 
+# integer sequences (patterns) representing columns of sites: these 
+# patterns reflect the pattern of site base variation across DNA 
+# sequences. returns a pattern object.
 get.patterns = function(sequences){
   # initialise matrix to store patterns
   patterns = matrix(nrow = nrow(sequences), ncol = ncol(sequences))
