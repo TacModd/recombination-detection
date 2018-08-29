@@ -5,17 +5,19 @@
 ### first, the recombined sites of the GC2 dataset
 
 # extracting sites from the relevant file
-dat = read.table('GC2subset_dates.fasta.vcf', head=T, comment='&', skip=3)
+dat = read.table('GC2subset_dates.summary_of_snp_distribution.vcf', head=T, comment='&', skip=3)
 dat$POS # <-- non recombined sites
 
 # getting the sites of all partitions
-allSNPs = which(GC2ptns$pattern.indices > 0)
+allSNPs = which(!is.na(GC2ptns$pattern.indices))
 length(allSNPs) # <-- total number of SNPs = 28959
-length(allSNPs) - length(dat$POS) # <-- no. recombined SNPs = 9926
+sum(GC2ptns$pattern.counts) # <-- sanity check = 28959
+
+length(allSNPs) - length(dat$POS) # <-- no. recombined SNPs = 28517
 
 # gets the recombined sites
 GC2_recombined_sites = allSNPs[!allSNPs %in% dat$POS]
-length(GC2_recombined_sites) # <-- sanity check = 9926
+length(GC2_recombined_sites) # <-- sanity check = 28517
 
 
 ### second, the recombined sites from my test results
@@ -69,9 +71,9 @@ my_recombined_sites = sort(my_recombined_sites)
 length(my_recombined_sites[my_recombined_sites %in% GC2_recombined_sites])
 
 
-# eg. comparing the 7124 set of sites against the immutable 9926 set (where the 
-# difference in length already implies some false negatives) we should obtain close 
-# to 7124 if we are on the right track. on the other hand a result of 2258 suggests a
+# eg. comparing the 7124 set of sites against the immutable 28517 set (where the 
+# difference in length already implies many false negatives) we should obtain close 
+# to 7124 if we are on the right track. on the other hand a lower result suggests a
 # high degree of inaccuracy (a high number of false positives AND negatives).
 
 # so then we might want to look at how both sets distribute across the genomes and 
@@ -98,19 +100,26 @@ GC2_rbn_ptns = GC2ptns$pattern.indices[GC2_recombined_sites]
 
 # get counts for the number of each recombined partition
 GC2_rbn_ptns_counts = sort(table(GC2_rbn_ptns), decreasing = T)
+sum(GC2_rbn_ptns_counts) # <-- sanity check = 28517
 GC2_rbn_ptns_counts[1:20] # <-- most common partitions
 
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 6300]) # <-- only 1 partition id
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 244]) # <-- 2 partition ids
+
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 1514 partitions
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 2]) # <-- 355 partitions
+
 # my recombined sites
-my_rbn_ptns = GC2ptns$pattern.indices[hmm]
+my_rbn_ptns = GC2ptns$pattern.indices[my_recombined_sites]
 
 # get counts again
 my_rbn_ptns_counts = sort(table(my_rbn_ptns), decreasing = T)
 my_rbn_ptns_counts[1:20] # <-- most common partitions
 
 length(my_rbn_ptns_counts) # <-- 646
-length(GC2_rbn_ptns_counts) # <-- 771
+length(GC2_rbn_ptns_counts) # <-- 2506
 
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 451
+length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 1514
 length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0
 
 # comparing the above tables reveals the degree of overlap between
@@ -163,3 +172,36 @@ GC2m = as.list(GC2m)
 
 
 # after results come through next thing on the agenda is checking partition patterns (1/2s vs 1/2/3/4s)
+
+# first I would like to get a broad overview of partition pattern similarity between singleton 
+# partitions and other partitions. to do that, we want to using hamming distance.
+
+# first, the singleton partition patterns:
+grp1 = GC2ptns$patterns[as.integer(names(ptns_to_remove))]
+length(gr1) # = 1514
+# second, all other partitions
+other_partitions = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts != 1]
+grp2 = unique(GC2ptns$patterns[as.integer(names(other_partitions))])
+length(grp2) # = 2506 - 1514 = 992
+
+# now finding the best hamming distances for each singleton partition
+answers = c()
+
+for (i in 1:length(grp1)){
+  answer = length(strsplit(grp1[1], '')[[1]])
+  for (j in 1:length(grp2)){
+    answer = min(sum(strsplit(grp1[i], '')[[1]] != strsplit(grp2[j], '')[[1]]), answer)
+  }
+  answers = c(answers, answer)
+}
+
+# and seeing what the results look like
+sort(table(answers), decreasing = T)
+
+# a look at the resulting table suggests many singleton partitions are not especially
+# similar to non-singleton partitions
+
+# now I'm curious to see: if changing all triallelic and quadallelic partition
+# patterns to biallelic patterns makes a big difference. I'm not sure how I'd use this
+# information just now, but it might still be useful to know
+
