@@ -205,3 +205,37 @@ sort(table(answers), decreasing = T)
 # patterns to biallelic patterns makes a big difference. I'm not sure how I'd use this
 # information just now, but it might still be useful to know
 
+bi.answers = c()
+
+for (i in 1:length(grp1)){
+  str1 = strsplit(grp1[i], '')[[1]]
+  str1[str1 == '3'] = '2'
+  str1[str1 == '4'] = '2'
+  answer = length(strsplit(grp1[1], '')[[1]])
+  for (j in 1:length(grp2)){
+    str2 = strsplit(grp2[j], '')[[1]]
+    str2[str2 == '3'] = '2'
+    str2[str2 == '4'] = '2'
+    answer = min(sum(str1 != str2), answer)
+  }
+  bi.answers = c(bi.answers, answer)
+}
+
+# and seeing what the results look like
+sort(table(bi.answers), decreasing = T)
+
+bi.answers
+  0   1   2   3   4   5   6   7   9   8  10  12  11  13  14  17  19 
+449 438 173 105  64  58  41  32  29  26  20  19  15   9   7   5   5 
+ 15  23  16  18  20  21  22  25  24 
+  3   3   2   2   2   2   2   2   1 
+
+answers
+  1   2   3   4   5   6   8   9   7  10  11  12  13  14  15  17  16 
+561 241 147  89  75  61  43  40  34  33  29  27  26  26  16  13  10 
+ 18  19  20  21  23  25  24  26  27  28  30 
+  7   7   7   6   5   5   2   1   1   1   1 
+
+# this analysis is a little problematic though because we don't assign
+# 1s to the major allele but rather the first, which could be mutated into
+# a minor allele. for a reliable analysis we should correct this
