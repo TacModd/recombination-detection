@@ -20,8 +20,9 @@ mask.all = function(sequences, partitions, results, aslist=T){
     for (j in 1:nrow(results[[i]])){
       # get the bounds of the recombination event (as positions within indices)
       tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
-      # mask everything within bounds
+      # mark everything within bounds for masking
       mask.sites[indices[tempm[1]]:indices[tempm[length(tempm)]]] = 0
+      # print tests
       if (j == 10){
         print(results[[i]][j, ])
         print(indices)
@@ -33,6 +34,7 @@ mask.all = function(sequences, partitions, results, aslist=T){
       #sequences[, indices[tempm[1]]:indices[tempm[length(tempm)]]] = as.DNAbin('n')
     }
   }
+  # mask actual sites
   sequences[, which(mask.sites == 0)] = as.DNAbin('n')
   
   # convert back to list useful for writing as .phy file but the user may not want this
