@@ -29,7 +29,7 @@ mask.all = function(sequences, partitions, results, aslist=T){
         print(tempm)
         print(indices[tempm[1]]:indices[tempm[length(tempm)]])
         print(mask.sites[indices[tempm[1]]:indices[tempm[length(tempm)]]])
-        print(sequences[, which(mask.sites == 0)]
+        print(sequences[, which(mask.sites == 0)])
       }
       #sequences[, indices[tempm[1]]:indices[tempm[length(tempm)]]] = as.DNAbin('n')
     }
