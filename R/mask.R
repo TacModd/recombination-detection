@@ -21,7 +21,7 @@ mask = function(sequences, partitions, results, aslist=T){
       ## mask each partition site
       #sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
       
-      # mark each partition site within bounds for masking (inclusive)
+      # record each partition site within bounds for masking (inclusive)
       mask.sites[indices[tempm[1]:tempm[length(tempm)]]] = 0
     }
   }
