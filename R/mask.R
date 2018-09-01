@@ -5,6 +5,10 @@
 mask = function(sequences, partitions, results, aslist=T){
   # convert sequences to matrix in case sequences in list format
   sequences = as.matrix(sequences)
+  
+  # initialise vector to keep track of sites to mask
+  mask.sites = 1:length(partitions$pattern.indices)
+  
   # for each recombined partition:
   for (i in 1:length(results)){
     # find the sites that accord with that partition
@@ -13,10 +17,17 @@ mask = function(sequences, partitions, results, aslist=T){
     for (j in 1:nrow(results[[i]])){
       # get the bounds of the recombination event (as positions within indices)
       tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
-      # and mask each partition site that falls within those bounds (inclusive)
-      sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
+      
+      ## mask each partition site
+      #sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
+      
+      # record each partition site within bounds for masking (inclusive)
+      mask.sites[indices[tempm[1]:tempm[length(tempm)]]] = 0
     }
   }
+  # mask actual sites
+  sequences[, which(mask.sites == 0)] = as.DNAbin('n')
+  
   # convert back to list useful for writing as .phy file but the user may not want this
   if (aslist){
     sequences = as.list(sequences)
