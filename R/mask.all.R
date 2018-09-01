@@ -22,7 +22,7 @@ mask.all = function(sequences, partitions, results, aslist=T){
       #tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
       
       # get the bounds of the recombination event
-      site.bounds = c(results[[i]][j, 2], results[[i]][j, 3]])
+      site.bounds = c(results[[i]][j, 2], results[[i]][j, 3])
       
       ## mask everything within bounds
       #sequences[, indices[tempm[1]]:indices[tempm[length(tempm)]]] = as.DNAbin('n')
