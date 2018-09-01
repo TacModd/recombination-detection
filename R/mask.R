@@ -18,22 +18,11 @@ mask = function(sequences, partitions, results, aslist=T){
       # get the bounds of the recombination event (as positions within indices)
       tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
       
+      ## mask each partition site
+      #sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
+      
       # mark each partition site within bounds for masking (inclusive)
       mask.sites[indices[tempm[1]:tempm[length(tempm)]]] = 0
-      
-      # print tests
-      if (j == 10){
-        print(results[[i]][j, ])
-        print(indices)
-        print(tempm)
-        print(indices[tempm[1]:tempm[length(tempm)]])
-        print(indices[tempm[1]]:indices[tempm[length(tempm)]])
-        print(mask.sites[indices[tempm[1]:tempm[length(tempm)]]])
-        print(mask.sites[indices[tempm[1]]:indices[tempm[length(tempm)]]])
-        print(sequences[, which(mask.sites == 0)])
-      }
-      
-      #sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
     }
   }
   # mask actual sites
