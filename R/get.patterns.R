@@ -7,8 +7,13 @@ get.patterns = function(sequences){
   patterns = matrix(nrow = nrow(sequences), ncol = ncol(sequences))
   # for each column in the aligned sequences:
   for (i in 1:ncol(sequences)){
-    # get the unique values
-    k = unique(sequences[, i])
+    
+    ## get the unique values
+    #k = unique(sequences[, i])
+    
+    # get the unique values in order of frequency (so major allele is assigned 1)
+    k = as.raw(names(sort(table(as.numeric(sequences[, i])), decreasing = T)))
+    
     # generate the patterns (by matching against the vector of
     # unique values)
     for (j in 1:nrow(sequences)){
