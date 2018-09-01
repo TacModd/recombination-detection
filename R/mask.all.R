@@ -18,14 +18,17 @@ mask.all = function(sequences, partitions, results, aslist=T){
     indices = which(partitions$pattern.indices == results[[i]][1, 1])
     # then for each recombination event
     for (j in 1:nrow(results[[i]])){
-      # get the bounds of the recombination event (as positions within indices)
-      tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
+      ## get the bounds of the recombination event (as positions within indices)
+      #tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
+      
+      # get the bounds of the recombination event
+      site.bounds = c(results[[i]][j, 2], results[[i]][j, 3]])
       
       ## mask everything within bounds
       #sequences[, indices[tempm[1]]:indices[tempm[length(tempm)]]] = as.DNAbin('n')
       
       # record everything within bounds for masking
-      mask.sites[indices[tempm[1]]:indices[tempm[length(tempm)]]] = 0
+      mask.sites[site.bounds[1]:site.bounds[2]] = 0
     }
   }
   # mask actual sites
