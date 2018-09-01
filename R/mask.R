@@ -15,17 +15,20 @@ mask = function(sequences, partitions, results, aslist=T){
     indices = which(partitions$pattern.indices == results[[i]][1, 1])
     # then for each recombination event
     for (j in 1:nrow(results[[i]])){
-      # get the bounds of the recombination event (as positions within indices)
-      tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
+      ## get the bounds of the recombination event (as positions within indices)
+      #tempm = c(which(indices == results[[i]][j, 2]), which(indices == results[[i]][j, 3]))
+      
+      # get the partition sites within the bounds of the recombination event
+      sites = indices[indices >= results[[i]][j, 2] & indices <= results[[i]][j, 3]]
       
       ## mask each partition site
       #sequences[, indices[tempm[1]:tempm[length(tempm)]]] = as.DNAbin('n')
       
-      # record each partition site within bounds for masking (inclusive)
-      mask.sites[indices[tempm[1]:tempm[length(tempm)]]] = 0
+      # record each site for masking (inclusive)
+      mask.sites[sites] = 0
     }
   }
-  # mask actual sites
+  # mask the recorded sites
   sequences[, which(mask.sites == 0)] = as.DNAbin('n')
   
   # convert back to list useful for writing as .phy file but the user may not want this
