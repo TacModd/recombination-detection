@@ -11,8 +11,14 @@ get.patterns = function(sequences){
     ## get the unique values
     #k = unique(sequences[, i])
     
-    # get the unique values in order of frequency (so major allele is assigned 1)
-    k = as.raw(names(sort(table(as.numeric(sequences[, i])), decreasing = T)))
+    ## get the unique values in order of frequency (so major allele is assigned 1)
+    #k = as.raw(names(sort(table(as.numeric(sequences[, i])), decreasing = T)))
+    
+    vector.i = as.numeric(sequences[, i])
+    unique.i = unique(vector.i)
+    table.i = rbind(label = unique.i, count = sapply(unique.i, function(x) sum(vector.i==x)))
+    table.i = table.i[, order(table.i[2, ], decreasing = T)]
+    k = as.raw(as.matrix(table.i)[1, ])
     
     # generate the patterns (by matching against the vector of
     # unique values)
