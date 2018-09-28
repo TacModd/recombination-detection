@@ -28,7 +28,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
       # initalise a vector to temporarily store event details
       tempvector = list()
       # initialise a left bound marker equal to the 1st partition index
-      # j = indices[1] # tintroduces a bias on the first test
+      # j = indices[1] # introduces a bias on the first test
       j = 1
       
       ### initialise variables for partition
