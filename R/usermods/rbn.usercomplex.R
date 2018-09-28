@@ -43,31 +43,96 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         k = length(tempindices)
         # calculate the probability of k or more events
         r = pbinom(k-1, n, p, log=TRUE) # 1 - pbinom(k-1, n, p)
-        # if probability below significance threshold:
-        if (r > log(1 - sig) & k > 1 & boundedit = 0){ # (r1 <= sig & k > 0); k > 1 necessary? test asap
-          # update rbn event count
-          innertempcount = innertempcount + 1
-          # store event details
-          tempvector[[innertempcount]] = c(i, j, tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
-          # update left bound marker
-          #j = tempindices[q + 1] + 1
-          j = j + n
-          
-        } else if (r > log(1 - sig) & k > 1 & boundedit = 1){
-          # edit events bounds to nearest partitions
-          # update left bound marker appropriately
-          
-        } else if (r > log(1 - sig) & k > 1 & boundedit = 2){
-          # iteratively edit bounds to reduce probability of event 
-          # further (both sides)
-          # update left bound marker appropriately
-          
-        # if not below significance threshold 
-        } else {
-          # add exception if !(k > 1)?
+        
+        # if probability not below significance threshold (or not enough events); k < 2 necessary? test asap
+        if (r <= log(1 - sig) | k < 2){
           # just update left bound marker
           j = j + n
         }
+        
+        ### otherwise record event according to boundedit parameter # was if (r > log(1 - sig) & k > 1 & boundedit = 0){
+        # if 0, hey! teacher! leave those bounds alone!
+        else if (boundedit = 0){ # (r1 <= sig & k > 0)
+          # update rbn event count
+          innertempcount = innertempcount + 1
+          # store event details
+          tempvector[[innertempcount]] = c(i, j, j + n - 1, k, n, 1 - exp(r)) # log(1-r)
+          # update left bound marker
+          #j = tempindices[q + 1] + 1
+          j = j + n
+        }
+        
+        # if 1, edit events bounds to nearest partitions
+        else if (boundedit = 1){
+          # update rbn event count
+          innertempcount = innertempcount + 1
+          # store event details, reducing bounds to nearest partitions
+          tempvector[[innertempcount]] = c(i, tempindices[1], tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
+          # update left bound marker appropriately 
+          j = j + n
+          # could also be
+          # j = tempindices[length(tempindices)] + 1
+        }
+        
+        # if 2, iteratively edit bounds to reduce probability of event further
+        else if (boundedit = 2){
+          # set a counter
+          y = 0
+          # while there are at least 3 events, attempt to shrink right bound
+          while (k > 2){
+            # calculate probability of k-y events
+            n1 = tempindices[length(tempindices) - y] - j
+            r1 = pbinom(k-1, n1, p, log=TRUE) # r1 = 1 - pbinom(k-1, n1, p) #
+            # calculate probability of k-y-1 events
+            n2 = tempindices[length(tempindices) - y - 1] - j
+            r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
+            # if shrinking the window reduces probability
+            if (r2 > r1){ # (r2 <= r1) #
+              # keep shrinking window
+              y = y + 1
+              # update the number of events
+              k = length(tempindices) - y
+            # otherwise stop with current values
+            } else {
+              break
+            }
+          }
+          
+          # set a counter
+          x = 0
+          # while there are at least 3 events, attempt to shrink left bound
+          while (k > 2){
+            # calculate probability of k-y-x events
+            n1 = tempindices[length(tempindices) - y] - tempindices[x]
+            r1 = pbinom(k-1, n1, p, log=TRUE) # r1 = 1 - pbinom(k-1, n1, p) #
+            # calculate probability of k-y-x-1 events
+            n2 = tempindices[length(tempindices) - y] - tempindices[x + 1]
+            r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
+            # if shrinking the window reduces probability
+            if (r2 > r1){ # (r2 <= r1) #
+              # keep shrinking window
+              x = x + 1
+              # update the number of events
+              k = length(tempindices) - y - x
+            # otherwise stop with current values
+            } else {
+              break
+            }
+          }
+          
+          # get number of events
+          k = length(tempindices) - y - x
+          # get size of window
+          n = tempindices[length(tempindices) - y] - tempindices[x]
+          # get log probability
+          logsigval = pbinom(k-1, n, p, log=TRUE) # to reduce underflow
+          # update result count
+          innertempcount = innertempcount + 1
+          # temporarily store results
+          tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n, 1 - exp(logsigval)) # log(1-logsigval)
+          # update left bound marker to just after former right bound
+          j = tempindices[length(tempindices) - y] + 1
+        } 
       }
       # update all significant events count
       m = m + innertempcount
