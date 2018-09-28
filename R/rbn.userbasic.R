@@ -47,7 +47,6 @@ rbn.userbasic = function(partitions, sig, n, correction='neither'){
           # store event details
           tempvector[[innertempcount]] = c(i, j, tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
           # update left bound marker
-          #j = tempindices[q + 1] + 1
           j = j + n
         # if not below significance threshold 
         } else {
