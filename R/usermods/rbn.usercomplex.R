@@ -58,7 +58,6 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # store event details
           tempvector[[innertempcount]] = c(i, j, j + n - 1, k, n, 1 - exp(r)) # log(1-r)
           # update left bound marker
-          #j = tempindices[q + 1] + 1
           j = j + n
         }
         
@@ -66,12 +65,14 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         else if (boundedit = 1){
           # update rbn event count
           innertempcount = innertempcount + 1
+          # update event size
+          n = tempindices[length(tempindices)] - tempindices[1] + 1
+          # update event probability
+          r = pbinom(k-1, n, p, log=TRUE)
           # store event details, reducing bounds to nearest partitions
           tempvector[[innertempcount]] = c(i, tempindices[1], tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
           # update left bound marker appropriately 
           j = j + n
-          # could also be
-          # j = tempindices[length(tempindices)] + 1
         }
         
         # if 2, iteratively edit bounds to reduce probability of event further
@@ -81,10 +82,10 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # while there are at least 3 events, attempt to shrink right bound
           while (k > 2){
             # calculate probability of k-y events
-            n1 = tempindices[length(tempindices) - y] - j
+            n1 = tempindices[length(tempindices) - y] - j + 1
             r1 = pbinom(k-1, n1, p, log=TRUE) # r1 = 1 - pbinom(k-1, n1, p) #
             # calculate probability of k-y-1 events
-            n2 = tempindices[length(tempindices) - y - 1] - j
+            n2 = tempindices[length(tempindices) - y - 1] - j + 1
             r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
             # if shrinking the window reduces probability
             if (r2 > r1){ # (r2 <= r1) #
@@ -103,10 +104,10 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # while there are at least 3 events, attempt to shrink left bound
           while (k > 2){
             # calculate probability of k-y-x events
-            n1 = tempindices[length(tempindices) - y] - tempindices[x]
+            n1 = tempindices[length(tempindices) - y] - tempindices[x] + 1
             r1 = pbinom(k-1, n1, p, log=TRUE) # r1 = 1 - pbinom(k-1, n1, p) #
             # calculate probability of k-y-x-1 events
-            n2 = tempindices[length(tempindices) - y] - tempindices[x + 1]
+            n2 = tempindices[length(tempindices) - y] - tempindices[x + 1] + 1
             r2 = pbinom(k-2, n2, p, log=TRUE) # r2 = 1 - pbinom(k-2, n2, p) #
             # if shrinking the window reduces probability
             if (r2 > r1){ # (r2 <= r1) #
@@ -120,16 +121,16 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
             }
           }
           
-          # get number of events
-          k = length(tempindices) - y - x
-          # get size of window
-          n = tempindices[length(tempindices) - y] - tempindices[x]
-          # get log probability
-          logsigval = pbinom(k-1, n, p, log=TRUE) # to reduce underflow
-          # update result count
+          # update rbn event count
           innertempcount = innertempcount + 1
+          # update number of ptns
+          k = length(tempindices) - y - x
+          # update event size
+          n = tempindices[length(tempindices) - y] - tempindices[x] + 1
+          # update event probability
+          r = pbinom(k-1, n, p, log=TRUE)
           # temporarily store results
-          tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n, 1 - exp(logsigval)) # log(1-logsigval)
+          tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n, 1 - exp(r)) # log(1-r)
           # update left bound marker to just after former right bound
           j = tempindices[length(tempindices) - y] + 1
         } 
