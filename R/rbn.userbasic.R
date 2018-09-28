@@ -1,5 +1,7 @@
 # implements (basic) user set window method
 
+
+
 rbn.userbasic = function(partitions, sig, n, correction='neither'){
   
   ### initialise global variables
@@ -14,6 +16,7 @@ rbn.userbasic = function(partitions, sig, n, correction='neither'){
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 3 partitions belonging to said ID:
     if (partitions$pattern.counts[i] > 2){
+      
       # get the partition indices
       indices = which(partitions$pattern.indices == i)
       # get the partition probability
@@ -23,7 +26,7 @@ rbn.userbasic = function(partitions, sig, n, correction='neither'){
       # initalise a vector to temporarily store event details
       tempvector = list()
       # initialise a left bound marker equal to the 1st partition index
-      # j = indices[1] # tintroduces a bias on the first test
+      # j = indices[1] # introduces a bias on the first test
       j = 1
       
       ### initialise variables for partition
