@@ -1,6 +1,6 @@
 ### explores modifications to improve user basic function
 # includes options to modify window bounds after discovery of event
-# # bounds left unmodified by default
+# bounds left unmodified by default
 # option to reduce left and right bound to outside partitions
 # option to keep reducing bounds if it further reduces probability
 
