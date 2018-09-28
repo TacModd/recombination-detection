@@ -1,9 +1,8 @@
-### exploring modifications to improve user basic function
-# reduce left and right bound to outside partitions be default?
-# option to keep reducing bounds if it further reduces probability?
-# Poisson option?
-# 
-
+### explores modifications to improve user basic function
+# includes options to modify window bounds after discovery of event
+# # bounds left unmodified by default
+# option to reduce left and right bound to outside partitions
+# option to keep reducing bounds if it further reduces probability
 
 
 rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, boundedit=0){
