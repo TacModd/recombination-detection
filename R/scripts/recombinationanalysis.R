@@ -224,17 +224,21 @@ GC2m_s_r = as.list(GC2m_s_r)
 write.dna(GC2m_s_r, 'Gub_sr.phy')
 
 
+###########################################################
+##### checking partition patterns (1/2s vs 1/2/3/4s) ######
 
-# after results come through next thing on the agenda is checking partition patterns (1/2s vs 1/2/3/4s)
+# one way to deal with singleton partition problem is to consider
+# merging singleton partitions somehow
 
-# first I would like to get a broad overview of partition pattern similarity between singleton 
-# partitions and other partitions. to do that, we want to using hamming distance.
+# first I would like to get a broad overview of partition pattern similarity 
+# between singleton partitions and other partitions. to do that, we want to 
+# using hamming distance.
 
 # first, the singleton partition patterns:
 grp1 = GC2ptns$patterns[as.integer(names(ptns_to_remove))]
 length(gr1) # = 1514
 # second, all other partitions
-other_partitions = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts != 1]
+other_partitions = G_rbn_ptns_counts[G_rbn_ptns_counts != 1]
 grp2 = unique(GC2ptns$patterns[as.integer(names(other_partitions))])
 length(grp2) # = 2506 - 1514 = 992
 
