@@ -23,7 +23,6 @@ rbn.userbasic = function(partitions, sig, n, correction='neither'){
       # initalise a vector to temporarily store event details
       tempvector = list()
       # initialise a left bound marker equal to the 1st partition index
-      # j = indices[1] # tintroduces a bias on the first test
       j = 1
       
       ### initialise variables for partition
@@ -38,17 +37,15 @@ rbn.userbasic = function(partitions, sig, n, correction='neither'){
         # calculate the probability of k or more events
         r = pbinom(k-1, n, p, log=TRUE) # 1 - pbinom(k-1, n, p)
         # if probability below significance threshold:
-        if (r > log(1 - sig) & k > 1){ # (r1 <= sig & k > 0); k > 1 necessary?
+        if (r > log(1 - sig)){ # (r1 <= sig & k > 0); k > 0/1 not necessary
           # update rbn event count
           innertempcount = innertempcount + 1
           # store event details
           tempvector[[innertempcount]] = c(i, j, tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
           # update left bound marker
-          #j = tempindices[q + 1] + 1
           j = j + n
         # if not below significance threshold 
         } else {
-          # add exception if !(k > 1)?
           # just update left bound marker
           j = j + n
         }
