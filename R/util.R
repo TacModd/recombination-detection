@@ -1,6 +1,6 @@
 # file adds helper functions for test correction
 
-# adding familywise error correction (bonferroni)
+# adding familywise error correction (analogous to bonferroni)
 ##########   implementation strategy:   ##########
 # 'global' correction
 # after running all tests:
