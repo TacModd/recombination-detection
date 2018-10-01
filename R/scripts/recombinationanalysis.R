@@ -164,40 +164,65 @@ length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0 ptns
 ##################################################################
 ##### scripts to test the importance of singleton partitions #####
 
-# partitions with only 1 recombining member according to baseline results
-ptns_to_remove = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]
-# all the recombining partitions EXCLUDING those partitions
-GC2_rbn_ptns_revised = 
-  GC2_rbn_ptns[!GC2_rbn_ptns %in% 
-                 as.integer(names(ptns_to_remove))]
-# site indices with only 1 recombining member according to baseline results
-indices_to_remove = which(GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
-# site indices with more than 1 recombining member according to baseline results
-indices_to_remain = which(!GC2_rbn_ptns %in% as.integer(names(ptns_to_remove)))
+# the following script removes all the rbn sites according to Gubbins but 
+# the sites for which only one ptn member was identified (=1514)
+
+# table of partitions with only 1 recombining member according to baseline results
+ptns_to_keep = G_rbn_ptns_counts[G_rbn_ptns_counts == 1]
+# table of all the recombining partitions EXCLUDING those partitions
+G_ptns_to_remove = G_rbn_ptns[!G_rbn_ptns %in% as.integer(names(ptns_to_keep))]
+# vector of partitions with only 1 recombining member according to baseline results
+ptns_to_keep = which(G_rbn_ptns %in% as.integer(names(ptns_to_keep)))
+# vector of partitions with more than 1 recombining member according to baseline results
+G_ptns_to_remove = which(!G_rbn_ptns %in% as.integer(names(ptns_to_keep)))
 # all the recombining sites EXCLUDING the sites with only 1 recombining member
-GC2_rbn_sites_revised = GC2_recombined_sites[indices_to_remain]
+indices_to_remove = G_recombined_sites[G_ptns_to_remove]
 
-# some more investigation reveals these are in fact all partitions for which 
-# only one member exists - no matter how we specify a spatial test, we could 
-# never detect these, so checking their relevance becomes even more important
+GC2m_Gs_k = as.matrix(GC2d)
 
-solitary_ptn_sites = GC2_recombined_sites[!GC2_recombined_sites %in% GC2_rbn_sites_revised]
-solitary_rbnd_ptns = GC2ptns$pattern.indices[solitary_ptn_sites]
-solitary_rbnd_ptns
-length(solitary_rbnd_ptns)
-unique(solitary_rnbd_ptns)
-length(unique(solitary_rnbd_ptns))
+GC2m_Gs_k[, indices_to_remove] = as.DNAbin('n')
 
-# so to test the relevance of these sites we need to remove them from the list
-# and then mask the remaining sites
+GC2m_Gs_k = as.list(GC2m_Gs_k)
 
-GC2m = as.matrix(GC2d)
+# the following script removes all the rbn sites according to Gubbins but 
+# the singleton partitions - the hypothetical best result using spatial tests
+# to test for each partition specifically (=1504)
 
-GC2m[, GC2_rbn_sites_revised] = as.DNAbin('n')
+GC2_ptns_counts = sort(table(GC2ptns$pattern.indices), decreasing=T)
 
-GC2m = as.list(GC2m)
+GC2_singleton_ptns = GC2_ptns_counts[GC2_ptns_counts == 1]
 
-# write and we are ready to phyml
+rbn_non_singleton_ptns = which(!G_rbn_ptns %in% as.integer(names(GC2_singleton_ptns)))
+
+singleton_indices_to_keep = G_recombined_sites[rbn_non_singleton_ptns]
+
+GC2m_s_k = as.matrix(GC2d)
+
+GC2m_s_k[, singleton_indices_to_keep] = as.DNAbin('n')
+
+GC2m_s_k = as.list(GC2m_s_k)
+
+write.dna(GC2m_s_k, 'Gub_sk.phy')
+
+# the following script removes only those singleton partitions that
+# Gubbins identified
+
+GC2_ptns_counts = sort(table(GC2ptns$pattern.indices), decreasing=T)
+
+GC2_singleton_ptns = GC2_ptns_counts[GC2_ptns_counts == 1]
+
+rbn_singleton_ptns = which(G_rbn_ptns %in% as.integer(names(GC2_singleton_ptns)))
+
+singleton_indices_to_remove = G_recombined_sites[rbn_singleton_ptns]
+
+GC2m_s_r = as.matrix(GC2d)
+
+GC2m_s_r[, singleton_indices_to_remove] = as.DNAbin('n')
+
+GC2m_s_r = as.list(GC2m_s_r)
+
+write.dna(GC2m_s_r, 'Gub_sr.phy')
+
 
 
 # after results come through next thing on the agenda is checking partition patterns (1/2s vs 1/2/3/4s)
