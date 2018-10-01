@@ -1,56 +1,74 @@
 ### this script extracts recombined sites as integer arrays for comparison
 ### and analysis of how they distribute across partitions
 
+# my_test_result = 
 
-### first, the recombined sites of the GC2 dataset
+##########################################################
+##### first, the recombined sites of the GC2 dataset #####
 
-# extracting sites from the relevant file
-dat = read.table('GC2subset_dates.summary_of_snp_distribution.vcf', head=T, comment='&', skip=3)
-dat$POS # <-- non recombined sites
+# extract sites from the relevant file
+G.data = read.table('GC2subset_dates.summary_of_snp_distribution.vcf', head=T, comment='&', skip=3)
+G.data$POS # <-- non recombined sites
 
-# getting the sites of all partitions
+# get the sites of all partitions
 allSNPs = which(!is.na(GC2ptns$pattern.indices))
 length(allSNPs) # <-- total number of SNPs = 28959
 sum(GC2ptns$pattern.counts) # <-- sanity check = 28959
 
 length(allSNPs) - length(dat$POS) # <-- no. recombined SNPs = 28517
 
-# gets the recombined sites
-GC2_recombined_sites = allSNPs[!allSNPs %in% dat$POS]
+# get the recombined sites
+G_recombined_sites = allSNPs[!allSNPs %in% G.data$POS]
 length(GC2_recombined_sites) # <-- sanity check = 28517
 
 
-### second, the recombined sites from my test results
+#############################################################
+##### second, the recombined sites from my test results #####
 
-# gets my test total number of recombined sites
+# get my test number of recombined sites
 count = 0
 for (i in 1:length(my_test_result)){
   count = count + sum(my_test_result[[i]][, 4])
 }
-count # no. recombined SNPs = eg. 7124
+count # no. recombined SNPs = eg. 24421
 
-# gets my test actual recombined sites (as integer array)
-my_recombined_sites = c()
-# for each partition
-for (i in 1:length(my_test_result)){
-  # get the relevant partition sites (indices)
-  indices = which(GC2ptns$pattern.indices == my_test_result[[i]][1, 1])
-  # then for each separate result
-  for (j in 1:nrow(my_test_result[[i]])){
-    # store sites within the listed bounds in a temporary array
-    tempa = indices[which(indices == my_test_result[[i]][j, 2]):which(indices == my_test_result[[i]][j, 3])]
-    # and add them to the overall array
-    my_recombined_sites = c(my_recombined_sites, tempa)
+# function obtains test recombined sites (as integer array)
+get.rbn.sites = function(testResult, partitions=GC2ptns, SNPs=allSNPs){
+  # initialise vector to keep track of sites
+  mask.sites = 1:length(partitions$pattern.indices)
+  
+  # gets my test actual recombined sites (as integer array)
+  # for each partition
+  for (i in 1:length(testResult)){
+    # get the relevant partition sites (indices)
+    indices = which(partitions$pattern.indices == testResult[[i]][1, 1])
+    # then for each separate result
+    for (j in 1:nrow(testResult[[i]])){
+      # get the partition sites within the bounds of the recombination event
+      sites = SNPs[SNPs >= testResult[[i]][j, 2] & SNPs <= testResult[[i]][j, 3]]
+      # and add them to the overall array
+      mask.sites[sites] = 0
+    }
   }
+  my_recombined_sites = which(mask.sites == 0)
+  
+  # sorts sites into ascending order
+  my_recombined_sites = sort(my_recombined_sites)
+  
+  # return sites
+  my_recombined_sites
 }
 
-length(my_recombined_sites) # <-- sanity check should = count from before eg. 7124
+# get my test recombined sites
+my_recombined_sites = get.rbn.sites(my_test_result)
 
-# sorts sites into ascending order
-my_recombined_sites = sort(my_recombined_sites)
+# a much simpler way to get the rbn site count using the above function
+count = length(my_recombined_sites) 
+count # <-- sanity check should = count from before eg. 24421
 
 
-### example comparisons
+####################################################
+##### comparing recombined sites between tests #####
 
 # if recombination detection has been successful then a molecular clock structure 
 # should be sucessfully recovered by tempest. this is the case for the previously
@@ -68,19 +86,23 @@ my_recombined_sites = sort(my_recombined_sites)
 
 
 # with that in mind, the following compares the overlap between two given sets:
-length(my_recombined_sites[my_recombined_sites %in% GC2_recombined_sites])
+overlap = length(my_recombined_sites[my_recombined_sites %in% GC2_recombined_sites])
+
+# alternatively, the following gets count of partitions exclusive to my test result
+exclusive = length(my_recombined_sites[!my_recombined_sites %in% GC2_recombined_sites])
 
 
-# eg. comparing the 7124 set of sites against the immutable 28517 set (where the 
-# difference in length already implies many false negatives) we should obtain close 
-# to 7124 if we are on the right track. on the other hand a lower result suggests a
-# high degree of inaccuracy (a high number of false positives AND negatives).
+# eg. comparing the 24421 set of sites against the "immutable" 28517 set (where the 
+# difference in length already implies quite a few false negatives) we should obtain 
+# close to a 24421 overlap  and 0 exclusive if we are on the right track. on the other 
+# hand a lower and higher result respectively suggests a high degree of inaccuracy
+# (a high number of false positives in addition to false negatives).
 
-# so then we might want to look at how both sets distribute across the genomes and 
+# so then we may want to look at how both sets distribute across the genomes and 
 # across partitions.
 
 # the following function is a basic means to plot the distribution of recombination across
-# the genome, but it isn't very informative
+# the genome, but it isn't very informative in R due to the number of sites
 
 plot.arr = function(partitions, int.arr){
   # plot an empty frame the length of the genome
@@ -93,47 +115,54 @@ plot.arr = function(partitions, int.arr){
 plot.arr(GC2ptns, GC2_recombined_sites)
 plot.arr(GC2ptns, my_recombined_sites)
 
-# to look at the distribution across partitions, we can try using a histogram
+# to look at the distribution across partitions, we could try using a histogram?
 
-# get the partitions for each recombined site
-GC2_rbn_ptns = GC2ptns$pattern.indices[GC2_recombined_sites]
 
-# get counts for the number of each recombined partition
-GC2_rbn_ptns_counts = sort(table(GC2_rbn_ptns), decreasing = T)
-sum(GC2_rbn_ptns_counts) # <-- sanity check = 28517
-GC2_rbn_ptns_counts[1:20] # <-- most common partitions
+#############################################################
+##### examining the recombined partitions between tests #####
 
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 6300]) # <-- only 1 partition id
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 244]) # <-- 2 partition ids
+# the following attempts to determine how different partitions
+# may be discovered according to different tests - even ignoring
+# differences in counts, differences in identified partitions
+# could result in significantly different trees
 
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 1514 partitions
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 2]) # <-- 355 partitions
+# get the partitions for recombined sites according to Gubbins
+G_rbn_ptns = GC2ptns$pattern.indices[G_recombined_sites]
 
-# my recombined sites
+# get counts for each recombined partition
+G_rbn_ptns_counts = sort(table(G_rbn_ptns), decreasing = T)
+sum(G_rbn_ptns_counts) # <-- sanity check = 28517
+G_rbn_ptns_counts[1:20] # <-- most common partitions
+
+length(G_rbn_ptns_counts[G_rbn_ptns_counts == 6300]) # <-- most common ptn id has 6300 rbn sites
+length(G_rbn_ptns_counts[G_rbn_ptns_counts == 244]) # <-- 2 ptn ids have 244 rbn sites
+
+length(G_rbn_ptns_counts[G_rbn_ptns_counts == 2]) # <-- 355 ptns have 2 rbn sites
+length(G_rbn_ptns_counts[G_rbn_ptns_counts == 1]) # <-- 1514 ptns have 1
+
+# get the partitions for recombined sites according to my results
 my_rbn_ptns = GC2ptns$pattern.indices[my_recombined_sites]
 
-# get counts again
+# get the counts for each partition
 my_rbn_ptns_counts = sort(table(my_rbn_ptns), decreasing = T)
 my_rbn_ptns_counts[1:20] # <-- most common partitions
 
-length(my_rbn_ptns_counts) # <-- 646
-length(GC2_rbn_ptns_counts) # <-- 2506
+length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0 ptns
 
-length(GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]) # <-- 1514
-length(my_rbn_ptns_counts[my_rbn_ptns_counts == 1]) # <-- 0
+# so looking at recombined partition counts, it is interesting to note that 
+# quite a lot of partitions for the baseline results (1514 )have only one 
+# recombining member - a physical impossibility using at least some of my methods. 
+# moreover because Gubbins had only 442 non recombined sites, most of them must
+# actually come from partitions with only one member (singleton partitions).
+# that's important, because there is no way I can design a spatial test with the
+# power to detect singleton partitions specifically: if these partitions are 
+# important, then this represents an upper limit to how well spatial tests perform
+# unless I amend the masking function appropriately. shall have to test how they
+# affect the resulting tree
 
-# comparing the above tables reveals the degree of overlap between
-# the most common partitions for each set. it seems that the baseline
-# results are much more densely concentrated within just a few common
-# partitions, whereas my results are much more evenly spread amongst
-# partitions
 
-# it is also interesting to note that quite a lot of partitions for the
-# baseline results have only one recombining member - a physical impossibility
-# using at least some of my methods. assuming these partitions are important 
-# (which can be tested) this may represent an upper bound on what accuracy is 
-# achievable using binomial tests of spatial distribution, and perhaps for 
-# poisson tests as well. 451/9926 is a fair chunk (about 4.5%).
+##################################################################
+##### scripts to test the importance of singleton partitions #####
 
 # partitions with only 1 recombining member according to baseline results
 ptns_to_remove = GC2_rbn_ptns_counts[GC2_rbn_ptns_counts == 1]
