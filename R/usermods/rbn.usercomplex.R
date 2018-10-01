@@ -51,7 +51,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         
         ### otherwise record event according to boundedit parameter # was if (r > log(1 - sig) & k > 1 & boundedit = 0){
         # if 0, hey! teacher! leave those bounds alone!
-        else if (boundedit = 0){ # (r1 <= sig & k > 0)
+        else if (boundedit == 0){ # (r1 <= sig & k > 0)
           # update rbn event count
           innertempcount = innertempcount + 1
           # store event details
@@ -61,7 +61,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         }
         
         # if 1, edit events bounds to nearest partitions
-        else if (boundedit = 1){
+        else if (boundedit == 1){
           # update rbn event count
           innertempcount = innertempcount + 1
           # update event size
@@ -75,7 +75,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         }
         
         # if 2, iteratively edit bounds to reduce probability of event further
-        else if (boundedit = 2){
+        else if (boundedit == 2){
           # set a counter
           y = 0
           # while there are at least 3 events, attempt to shrink right bound
