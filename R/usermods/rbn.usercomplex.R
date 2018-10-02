@@ -112,8 +112,8 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
             if (r2 > r1){ # (r2 <= r1) #
               # keep shrinking window
               x = x + 1
-              # update the number of events
-              k = length(tempindices) - y - x
+              # update the number of events (x - 1) since we include first x bound
+              k = length(tempindices) - y - (x - 1)
             # otherwise stop with current values
             } else {
               break
@@ -123,7 +123,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # update rbn event count
           innertempcount = innertempcount + 1
           # update number of ptns
-          k = length(tempindices) - y - x
+          k = length(tempindices) - y - (x -1)
           # update event size
           n = tempindices[length(tempindices) - y] - tempindices[x] + 1
           # update event probability
