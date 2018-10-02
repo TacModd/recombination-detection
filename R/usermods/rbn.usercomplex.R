@@ -123,7 +123,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # update rbn event count
           innertempcount = innertempcount + 1
           # update number of ptns
-          k = length(tempindices) - y - (x -1)
+          k = length(tempindices) - y - (x - 1)
           # update event size
           n = tempindices[length(tempindices) - y] - tempindices[x] + 1
           # update event probability
