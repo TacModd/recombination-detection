@@ -32,8 +32,8 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
       j = 1
       
       ### initialise variables for partition
-      # while we haven't iterated past the last ptn index:
-      while (j < indices[length(indices)]){
+      # while we haven't iterated past the SECOND last ptn index:
+      while (j <= indices[length(indices) - 1]){
         # get indices between j and j + user window size
         tempindices = which(partitions$pattern.indices[j:(j+n-1)] == i)
         # correct index values (above values from 1)
@@ -43,7 +43,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
         # calculate the probability of k or more events
         r = pbinom(k-1, n, p, log=TRUE) # 1 - pbinom(k-1, n, p)
         
-        # if probability not below significance threshold (or not enough events); k < 2 necessary? test asap
+        # if probability not below significance threshold (or not enough events); k < 2 not necessary but useful
         if (r <= log(1 - sig) | k < 2){
           # just update left bound marker
           j = j + n
@@ -98,8 +98,8 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
             }
           }
           
-          # set a counter
-          x = 0
+          # set a counter (this needs to be 1 rather than 0)
+          x = 1
           # while there are at least 3 events, attempt to shrink left bound
           while (k > 2){
             # calculate probability of k-y-x events
