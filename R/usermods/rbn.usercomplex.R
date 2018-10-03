@@ -65,11 +65,11 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # update rbn event count
           innertempcount = innertempcount + 1
           # update event size
-          n = tempindices[length(tempindices)] - tempindices[1] + 1
+          n1 = tempindices[length(tempindices)] - tempindices[1] + 1
           # update event probability
-          r = pbinom(k-1, n, p, log=TRUE)
+          r = pbinom(k-1, n1, p, log=TRUE)
           # store event details, reducing bounds to nearest partitions
-          tempvector[[innertempcount]] = c(i, tempindices[1], tempindices[length(tempindices)], k, n, 1 - exp(r)) # log(1-r)
+          tempvector[[innertempcount]] = c(i, tempindices[1], tempindices[length(tempindices)], k, n1, 1 - exp(r)) # log(1-r)
           # update left bound marker appropriately 
           j = j + n
         }
@@ -125,11 +125,11 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # update number of ptns
           k = length(tempindices) - y - (x - 1)
           # update event size
-          n = tempindices[length(tempindices) - y] - tempindices[x] + 1
+          n1 = tempindices[length(tempindices) - y] - tempindices[x] + 1
           # update event probability
           r = pbinom(k-1, n, p, log=TRUE)
           # temporarily store results
-          tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n, 1 - exp(r)) # log(1-r)
+          tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n1, 1 - exp(r)) # log(1-r)
           # update left bound marker to just after former right bound
           j = tempindices[length(tempindices) - y] + 1
         } 
