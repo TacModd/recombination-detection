@@ -127,7 +127,7 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither', minsize=3, 
           # update event size
           n1 = tempindices[length(tempindices) - y] - tempindices[x] + 1
           # update event probability
-          r = pbinom(k-1, n, p, log=TRUE)
+          r = pbinom(k-1, n1, p, log=TRUE)
           # temporarily store results
           tempvector[[innertempcount]] = c(i, tempindices[x], tempindices[length(tempindices) - y], k, n1, 1 - exp(r)) # log(1-r)
           # update left bound marker to just after former right bound
