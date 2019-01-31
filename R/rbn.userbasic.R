@@ -1,7 +1,5 @@
 # implements (basic) user set window method
 
-
-
 rbn.userbasic = function(partitions, sig, n, correction='neither'){
   
   ### initialise global variables

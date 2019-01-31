@@ -16,7 +16,8 @@ rbn.usercomplex = function(partitions, sig, n, correction='neither'){
   for (i in 1:length(partitions$pattern.IDs)){
     # if there are at least 3 partitions belonging to said ID:
     if (partitions$pattern.counts[i] > 2){
-      
+
+      ### identify the recombination events
       # get the partition indices
       indices = which(partitions$pattern.indices == i)
       # get the partition probability
